@@ -13,3 +13,12 @@ block content
                 message: 'Hello Vue!'
             }
         })
+
+        var socket = io();
+        socket.on('connection', function (data) {
+            console.log('connected');
+        });
+
+        socket.on('disconnect', function (data) {
+            console.log('disconnected');
+        });
