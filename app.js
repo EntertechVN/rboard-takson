@@ -4,13 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
-var socket = require('./socket');
 
 var indexRouter = require('./routes/index');
 var boardsRouter = require('./routes/boards');
 
 var app = express();
-socket(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

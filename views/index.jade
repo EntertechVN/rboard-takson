@@ -14,7 +14,7 @@ block content
             }
         })
 
-        var socket = io(':3000');
+        var socket = io();
         socket.on('connection', function (data) {
             console.log('connected');
         });
