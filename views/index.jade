@@ -6,10 +6,19 @@ block content
         h1= title
         p Welcome to #{title}
 
-        script.
-            var app = new Vue({
-                el: '#app',
-                data: {
-                    message: 'Hello Vue!'
-                }
-            })
+    script.
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!'
+            }
+        })
+
+        var socket = io();
+        socket.on('connection', function (data) {
+            console.log('connected');
+        });
+
+        socket.on('disconnect', function (data) {
+            console.log('disconnected');
+        });
