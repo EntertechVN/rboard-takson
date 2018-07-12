@@ -2,9 +2,29 @@ extends layout
 
 block content
     div#app
-        p {{ message }}
-        h1= title
-        p Welcome to #{title}
+        div.board-container
+            table.board
+                tr
+                    td MỤC TIÊU NGÀY
+                    td
+                        span.value 0
+                tr
+                    td MỤC TIÊU HIỆN TẠI
+                    td
+                        span.value 0
+                tr
+                    td SẢN LƯỢNG THỰC TẾ
+                    td
+                        span.value 0
+                tr
+                    td CHÊNH LỆCH
+                    td
+                        span.value 0
+                tr
+                    td HIỆU SUẤT (%)
+                    td
+                        span.value 0
+                        span  %
 
     script.
         var app = new Vue({
