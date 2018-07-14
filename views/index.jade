@@ -26,7 +26,18 @@ block content
                         td
                             span.value 0
                             span  %
-
+            div
+                table#bkd-setting
+                    tr
+                        td  Cycle (giây):
+                            input(type='number')#CycleTime
+                        td
+                            button#SubmitCycleTime Submit
+                    tr
+                        td  Mục tiêu ngày:
+                            input(type='number')#MTNgay
+                        td
+                            button#SubmitMTNgay Submit
     script.
         var app = new Vue({
             el: '#app',
@@ -50,4 +61,8 @@ block content
         socket.on('set data', function (boards) {
             console.log(boards);
             app.boards = boards
+        })
+
+        socket.on('data updated',function () {
+            socket.emit('get data');
         })

@@ -9,13 +9,15 @@ html
     <script src="/javascripts/jquery-3.3.1.min.js"></script>
     <script src="/javascripts/bootstrap.min.js"></script>
     <script src="/javascripts/socket.io.js"></script>
-    div#wrapper.container
+    div#wrapper
       div.row
         div.col-2#sidebar
           ul#navbar
             li
-              a(href='/') Bảng chính
+              a(href='/') Bảng khắc dấu
             li
-              a(href='#') Bảng con
+              a(href='/boards') Bảng con
+            li
+              a(href='/setting') Cấu hình
         div.col-10#content
           block content

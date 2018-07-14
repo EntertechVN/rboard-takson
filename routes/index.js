@@ -10,4 +10,8 @@ router.get('/healthz', function(req, res, next) {
     res.send('OK')
 });
 
+router.get('/setting', function(req, res, next) {
+    res.render('setting');
+});
+
 module.exports = router;

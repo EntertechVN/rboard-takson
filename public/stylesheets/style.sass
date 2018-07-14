@@ -1,6 +1,10 @@
 body
   font: 14px Helvetica, Arial, sans-serif
 
+#app
+  padding-top: 20px
+  padding-left: 20px
+
 #sidebar
   background: #343a40
   height: 100vh
@@ -19,6 +23,7 @@ body
   display: block
   overflow: hidden
   color: #ccc
+  text-transform: uppercase
 
 .board-container
   padding: 15px
@@ -37,3 +42,10 @@ body
 
 .board .value
   color: #db251d
+
+input
+  &[type="number"]
+    width: 100px
+    
+#bkd-setting td
+  text-align: right

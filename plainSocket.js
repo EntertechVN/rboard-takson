@@ -18,6 +18,9 @@ module.exports = function (io, port) {
                             bkd,
                             { upsert: true }
                         );
+                        TCPSocket.write(response({
+                            status: 'OK'
+                        }));
                         io.sockets.emit('data updated')
                     });
                 } else if (isBCON(message)) {
@@ -68,4 +71,8 @@ function isBCON(message) {
 function parseBKD(stringMessage) {
     let parsed = queryString.parse(stringMessage);
     return new BangKhacDau(parsed.Manufactor, parsed.BoardID, parsed.BoardName, parsed.MThientai, parsed.SLThucte)
+}
+
+function response(data) {
+    return queryString.stringify(data)
 }
