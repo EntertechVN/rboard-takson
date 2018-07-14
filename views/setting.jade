@@ -2,7 +2,7 @@ extends layout
 
 block content
     div#app.row
-        div#time-setup
+        div#time-setup.col-6
             table
                 tr
                     td
@@ -11,7 +11,7 @@ block content
                 - for (i=1;i<=12;i++)
                     tr
                         if((i+3) % 4 === 0)
-                            td.float-right= 'Ca ' + (i +3) / 4
+                            td.float-right= 'Ca ' + (i +3) / 4 + ': '
                         else
                             td
                         td

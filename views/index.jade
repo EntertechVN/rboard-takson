@@ -32,12 +32,12 @@ block content
                         td  Cycle (giây):
                             input(type='number')#CycleTime
                         td
-                            button(v-on:click='submitCycleTime')#SubmitCycleTime Submit
+                            button(v-on:click='submitCycleTime(bkd.BoardID)')#SubmitCycleTime Submit
                     tr
                         td  Mục tiêu ngày:
                             input(type='number')#MTNgay
                         td
-                            button(v-on:click='submitMTNgay')#SubmitMTNgay Submit
+                            button(v-on:click='submitMTNgay(bkd.BoardID)')#SubmitMTNgay Submit
     script.
         var socket = io()
         var app = new Vue({
@@ -47,7 +47,7 @@ block content
             },
 
             methods: {
-                submitCycleTime: function () {
+                submitCycleTime: function (boardID) {
                     let elemCycleTime = $('#CycleTime')
                     let cycleTimeValue = elemCycleTime.val()
 
@@ -55,14 +55,14 @@ block content
                         let ok = confirm('Đồng ý cập nhật cycle time với giá trị ' + cycleTimeValue + '?')
 
                         if (ok) {
-                            socket.emit('update CycleTime', cycleTimeValue)
+                            socket.emit('update bkd', {BoardID: boardID, CycleTime: cycleTimeValue})
 
                             // empty the value
                             elemCycleTime.val('')
                         }
                     }
                 },
-                submitMTNgay: function () {
+                submitMTNgay: function (boardID) {
                     let elemMTNgay = $('#MTNgay')
                     let mtNgayValue = elemMTNgay.val()
 
@@ -70,7 +70,7 @@ block content
                         let ok = confirm('Đồng ý cập nhật mục tiêu ngày với giá trị ' + mtNgayValue + '?')
 
                         if (ok) {
-                            socket.emit('update MTNgay', mtNgayValue)
+                            socket.emit('update bkd', {BoardID: boardID, MTNgay: mtNgayValue})
 
                             // empty the value
                             elemMTNgay.val('')

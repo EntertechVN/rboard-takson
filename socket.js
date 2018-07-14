@@ -14,22 +14,11 @@ module.exports = function (io) {
             })
         });
 
-        socket.on('update CycleTime', function (cycleTime) {
+        socket.on('update bkd', function (bkd) {
             mongo(function (db) {
-                db.collection("setting").update(
-                    {id: 0},
-                    {$set: {CycleTime: cycleTime, id: 0}},
-                    {upsert: true}
-                );
-                //socket.emit('data updated')
-            })
-        });
-
-        socket.on('update MTNgay', function (mtNgay) {
-            mongo(function (db) {
-                db.collection("setting").update(
-                    {id: 0},
-                    {$set: {MTNgay: mtNgay, id: 0}},
+                db.collection("bkds").update(
+                    {BoardID: bkd.BoardID},
+                    {$set: bkd},
                     {upsert: true}
                 );
             });
