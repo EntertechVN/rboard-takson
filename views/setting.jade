@@ -15,9 +15,9 @@ block content
                         else
                             td
                         td
-                            input(type='time', id='TimeCaVao' + i)
+                            input(type='time', id='TimeCaVao' + i, :value="setting.TimeCaVao" + i)
                         td
-                            input(type='time', id='TimeCaRa' + i)
+                            input(type='time', id='TimeCaRa' + i, :value="setting.TimeCaRa" + i)
                 tr
                     td(colspan=3)
                         button(v-on:click='submitTime')#submitTime.float-right Set giờ
@@ -25,7 +25,9 @@ block content
         var socket = io()
         var app = new Vue({
             el: '#app',
-            data: {},
+            data: {
+                setting: {}
+            },
             methods: {
                 submitTime: function () {
                     let timeArr = {}
@@ -42,4 +44,13 @@ block content
                     }
                 }
             }
+        })
+
+        socket.on('connect', function () {
+            console.log('connected')
+            socket.emit('get setting')
+        })
+
+        socket.on('set setting', function (setting) {
+            app.setting = setting
         })

@@ -34,5 +34,15 @@ module.exports = function (io) {
                 )
             })
         })
+
+        socket.on('get setting', function () {
+            console.log('get setting event received');
+            mongo(function (db) {
+                data = {};
+                db.collection("setting").find().toArray(function (err, setting) {
+                    socket.emit('set setting', setting[0]);
+                });
+            })
+        });
     });
 };

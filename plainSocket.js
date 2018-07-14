@@ -83,6 +83,7 @@ function response(data) {
 }
 
 function timeToMinute(objs) {
+    if (objs == null) return;
     let rObjs = {};
     Object.keys(objs).forEach(function (key) {
         obj = objs[key];
