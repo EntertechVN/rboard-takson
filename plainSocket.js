@@ -14,13 +14,18 @@ module.exports = function (io, port) {
                     let bkd = parseBKD(stringMessage);
                     mongo(function (db) {
                         db.collection("bkds").update(
-                            { BoardID: bkd.BoardID },
+                            {BoardID: bkd.BoardID},
                             bkd,
-                            { upsert: true }
+                            {upsert: true}
                         );
-                        TCPSocket.write(response({
-                            status: 'OK'
-                        }));
+
+                        db.collection("setting").find().toArray(function (err, result) {
+                            TCPSocket.write(response({
+                                status: 'OK',
+                                ...timeToMinute(result[0])
+                            }));
+                        });
+
                         io.sockets.emit('data updated')
                     });
                 } else if (isBCON(message)) {
@@ -75,4 +80,22 @@ function parseBKD(stringMessage) {
 
 function response(data) {
     return queryString.stringify(data)
+}
+
+function timeToMinute(objs) {
+    let rObjs = {};
+    Object.keys(objs).forEach(function (key) {
+        obj = objs[key];
+        if (obj.toString().indexOf(':') !== -1) {
+            h = obj.split(':')[0];
+            m = obj.split(':')[1];
+            rObjs[key] = parseInt(h) * 60 + parseInt(m);
+        } else {
+            rObjs[key] = obj;
+        }
+    });
+
+    console.log(rObjs);
+
+    return rObjs;
 }

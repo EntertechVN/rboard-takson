@@ -3,24 +3,43 @@ extends layout
 block content
     div#app.row
         div#time-setup
-            div.form-group
-                table
+            table
+                tr
+                    td
+                    td Giờ vào
+                    td Giờ ra
+                - for (i=1;i<=12;i++)
                     tr
+                        if((i+3) % 4 === 0)
+                            td.float-right= 'Ca ' + (i +3) / 4
+                        else
+                            td
                         td
-                        td Giờ vào
-                        td Giờ ra
-                    tr(v-for="i in (1,12)")
-                        td.float-right Ca {{ i }}:
+                            input(type='time', id='TimeCaVao' + i)
                         td
-                            input(type='time', id='TimeCaVao{{ i }}')
-                        td
-                            input(type='time', id='#TimeCaRa{{ i }}')
-                    tr
-                        td(colspan=3)
-                            button#submitTime.float-right Set giờ
+                            input(type='time', id='TimeCaRa' + i)
+                tr
+                    td(colspan=3)
+                        button(v-on:click='submitTime')#submitTime.float-right Set giờ
     script.
+        var socket = io()
         var app = new Vue({
             el: '#app',
-            data: {
+            data: {},
+            methods: {
+                submitTime: function () {
+                    let timeArr = {}
+                    for (i=1; i <=12; i++){
+                        let cavaoKey = 'TimeCaVao'+i
+                        let caraKey = 'TimeCaRa'+i
+                        timeArr[cavaoKey] = $('#TimeCaVao'+i).val()
+                        timeArr[caraKey] = $('#TimeCaRa'+i).val()
+                    }
+
+                    console.log(timeArr)
+                    if (confirm('Xác nhận điều chỉnh thời gian các ca?')){
+                        socket.emit('update TimeCa', timeArr)
+                    }
+                }
             }
         })

@@ -28,6 +28,16 @@ module.exports = function (io) {
                     {id: 0},
                     {$set: {MTNgay: mtNgay, id: 0}},
                     {upsert: true}
+                );
+            })
+        });
+
+        socket.on('update TimeCa', function (timeArr) {
+            mongo(function (db) {
+                db.collection("setting").update(
+                    {id: 0},
+                    {$set: {...timeArr, id: 0}},
+                    {upsert: true}
                 )
             })
         })
