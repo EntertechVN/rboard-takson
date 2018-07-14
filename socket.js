@@ -25,6 +25,15 @@ module.exports = function (io) {
             socket.emit('bkds updated')
         });
 
+        socket.on('delete bkd', function (BoardID) {
+            mongo(function (db) {
+                db.collection("bkds").removeOne(
+                    {BoardID: BoardID}
+                );
+            });
+            socket.emit('bkds updated')
+        });
+
         socket.on('update TimeCa', function (timeArr) {
             mongo(function (db) {
                 db.collection("setting").update(

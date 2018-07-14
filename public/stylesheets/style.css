@@ -47,4 +47,12 @@ input[type="number"] {
 #bkd-setting td {
   text-align: right; }
 
+.board-delete {
+  display: block;
+  color: red; }
+  .board-delete:before {
+    content: 'x'; }
+  .board-delete:hover {
+    cursor: pointer; }
+
 /*# sourceMappingURL=style.css.map */
