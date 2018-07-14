@@ -3,13 +3,13 @@ module.exports = function (io) {
     io.on('connection', function (socket) {
         console.log('a client connected');
 
-        socket.on('get data', function () {
-            console.log('get data event received');
+        socket.on('get bkds', function () {
+            console.log('get bkds event received');
             mongo(function (db) {
                 data = {};
                 db.collection("bkds").find().toArray(function (err, bkds) {
                     data.bkds = bkds;
-                    socket.emit('set data', data);
+                    socket.emit('set bkds', data);
                 });
             })
         });
@@ -22,7 +22,7 @@ module.exports = function (io) {
                     {upsert: true}
                 );
             });
-            socket.emit('data updated')
+            socket.emit('bkds updated')
         });
 
         socket.on('update TimeCa', function (timeArr) {

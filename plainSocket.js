@@ -11,7 +11,7 @@ module.exports = function (io, port) {
             console.log('plain TCP message received ', stringMessage);
             if (isValidateMessage(message)) {
                 if (isBKD(message)) {
-                    let bkd = parseBKD(stringMessage);
+                    let bkd = queryString.parse(stringMessage);
                     mongo(function (db) {
                         db.collection("bkds").update(
                             {BoardID: bkd.BoardID},
@@ -36,10 +36,18 @@ module.exports = function (io, port) {
                             }));
                         });
 
-                        io.sockets.emit('data updated')
+                        io.sockets.emit('bkds updated')
                     });
                 } else if (isBCON(message)) {
+                    let bcon = queryString.parse(stringMessage);
 
+                    mongo(function (db) {
+                        db.collection("bcons").update(
+                            {BoardID: bcon.BoardID},
+                            {$set: bcon},
+                            {upsert: true}
+                        );
+                    });
                 }
             }
         });
@@ -61,16 +69,6 @@ function getUnique(value) {
     return value;
 }
 
-class BangKhacDau {
-    constructor(Manufactor, BoardID, BoardName, MThientai, SLThucte) {
-        this.Manufactor = getUnique(Manufactor);
-        this.BoardID = getUnique(BoardID);
-        this.BoardName = getUnique(BoardName);
-        this.MThientai = getUnique(MThientai);
-        this.SLThucte = getUnique(SLThucte);
-    }
-}
-
 function isValidateMessage(message) {
     return message && message.toString().indexOf('Manufactor') !== -1;
 }
@@ -81,11 +79,6 @@ function isBKD(message) {
 
 function isBCON(message) {
     return message && message.toString().indexOf(B_CON) !== -1;
-}
-
-function parseBKD(stringMessage) {
-    let parsed = queryString.parse(stringMessage);
-    return new BangKhacDau(parsed.Manufactor, parsed.BoardID, parsed.BoardName, parsed.MThientai, parsed.SLThucte)
 }
 
 function response(data) {

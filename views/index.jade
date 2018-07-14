@@ -6,6 +6,10 @@ block content
             div.board-container
                 table.board
                     tr
+                        td ID
+                        td
+                            span.value {{ bkd.BoardID }}
+                    tr
                         td MỤC TIÊU NGÀY
                         td
                             span.value {{ bkd.MTNgay }}
@@ -82,18 +86,18 @@ block content
 
         socket.on('connect', function () {
             console.log('connected')
-            socket.emit('get data')
+            socket.emit('get bkds')
         })
 
         socket.on('disconnect', function () {
             console.log('disconnected')
         })
 
-        socket.on('set data', function (data) {
+        socket.on('set bkds', function (data) {
             console.log(data)
             app.bkds = data.bkds
         })
 
-        socket.on('data updated', function () {
-            socket.emit('get data')
+        socket.on('bkds updated', function () {
+            socket.emit('get bkds')
         })
