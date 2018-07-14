@@ -32,37 +32,70 @@ block content
                         td  Cycle (giây):
                             input(type='number')#CycleTime
                         td
-                            button#SubmitCycleTime Submit
+                            button(v-on:click='submitCycleTime')#SubmitCycleTime Submit
                     tr
                         td  Mục tiêu ngày:
                             input(type='number')#MTNgay
                         td
-                            button#SubmitMTNgay Submit
+                            button(v-on:click='submitMTNgay')#SubmitMTNgay Submit
     script.
+        var socket = io()
         var app = new Vue({
             el: '#app',
             data: {
                 boards: {
                     bkds: [{MThientai: 0, SLThucte: 0}]
                 }
+            },
+
+            methods: {
+                submitCycleTime: function () {
+                    let elemCycleTime = $('#CycleTime')
+                    let cycleTimeValue = elemCycleTime.val()
+
+                    if(parseInt(cycleTimeValue)){
+                        let ok = confirm('Đồng ý cập nhật cycle time với giá trị ' + cycleTimeValue + '?')
+
+                        if (ok) {
+                            socket.emit('update CycleTime', cycleTimeValue)
+
+                            // empty the value
+                            elemCycleTime.val('')
+                        }
+                    }
+                },
+                submitMTNgay: function () {
+                    let elemMTNgay = $('#MTNgay')
+                    let mtNgayValue = elemMTNgay.val()
+
+                    if (parseInt(mtNgayValue)) {
+                        let ok = confirm('Đồng ý cập nhật mục tiêu ngày với giá trị ' + mtNgayValue + '?')
+
+                        if (ok) {
+                            socket.emit('update MTNgay', mtNgayValue)
+
+                            // empty the value
+                            elemMTNgay.val('')
+                        }
+                    }
+                }
             }
         })
 
-        var socket = io();
         socket.on('connect', function () {
-            console.log('connected');
-            socket.emit('get data');
-        });
+            console.log('connected')
+            socket.emit('get data')
+        })
 
         socket.on('disconnect', function () {
-            console.log('disconnected');
-        });
+            console.log('disconnected')
+        })
 
         socket.on('set data', function (boards) {
-            console.log(boards);
+            console.log(boards)
             app.boards = boards
         })
 
         socket.on('data updated',function () {
-            socket.emit('get data');
+            socket.emit('get data')
         })

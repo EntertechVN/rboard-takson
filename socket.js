@@ -10,6 +10,26 @@ module.exports = function (io) {
                     socket.emit('set data', {bkds: result});
                 });
             })
+        });
+
+        socket.on('update CycleTime', function (cycleTime) {
+            mongo(function (db) {
+                db.collection("setting").update(
+                    {id: 0},
+                    {$set: {CycleTime: cycleTime, id: 0}},
+                    {upsert: true}
+                )
+            })
+        });
+
+        socket.on('update MTNgay', function (mtNgay) {
+            mongo(function (db) {
+                db.collection("setting").update(
+                    {id: 0},
+                    {$set: {MTNgay: mtNgay, id: 0}},
+                    {upsert: true}
+                )
+            })
         })
     });
 };
