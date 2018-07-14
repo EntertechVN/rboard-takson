@@ -55,4 +55,36 @@ input[type="number"] {
   .board-delete:hover {
     cursor: pointer; }
 
+.bcon td, .bcon th {
+  border: 1px solid black;
+  text-align: center;
+  background: white;
+  padding: 5px; }
+
+.bcon th {
+  font-weight: bold; }
+
+.bcon .yellow {
+  background: yellow; }
+
+.lamp-color span {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #cccccc;
+  margin: 0 auto; }
+
+.lamp-color0 span {
+  background: green; }
+
+.lamp-color1 span {
+  background: yellow; }
+
+.lamp-color2 span {
+  background: red; }
+
+.lamp-color3 span {
+  background: black; }
+
 /*# sourceMappingURL=style.css.map */

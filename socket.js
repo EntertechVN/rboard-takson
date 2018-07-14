@@ -47,11 +47,60 @@ module.exports = function (io) {
         socket.on('get setting', function () {
             console.log('get setting event received');
             mongo(function (db) {
-                data = {};
                 db.collection("setting").find().toArray(function (err, setting) {
                     socket.emit('set setting', setting[0]);
                 });
             })
         });
+
+        socket.on('get bcons', function () {
+            console.log('get bcons event received');
+            mongo(function (db) {
+                db.collection("bcons").find().toArray(function (err, bcons) {
+                    socket.emit('set bcons', BconLamp.createMulti(bcons));
+                });
+            })
+        });
     });
 };
+
+class BconLamp {
+    constructor(bcon) {
+        this.BoardID = bcon.BoardID;
+        let lamps = [];
+
+        let keys = Object.keys(bcon);
+        keys.forEach(function (key) {
+            if (key.toString().indexOf('Light') !== -1) {
+                let stt = key.toString().split('Light')[1];
+                lamps.push(new Lamp(stt, bcon['CountR' + stt], bcon['CountY' + stt],
+                    bcon['Light' + stt], bcon['SLThucte' + stt]))
+            }
+        });
+        this.lamps = lamps.sort(lampSort);
+    }
+
+    static createMulti(bcons){
+        let bconLamps = [];
+        bcons.forEach(function (bcon) {
+            bconLamps.push(new BconLamp(bcon))
+        });
+
+        return bconLamps
+    }
+}
+
+class Lamp {
+    constructor(TT, CountR, CountY, Light, SLThucte) {
+        this.TT = TT;
+        this.CountR = CountR;
+        this.CountY = CountY;
+        this.Light = Light;
+        this.SLThucte = SLThucte;
+    }
+}
+
+function lampSort(a, b){
+    if(parseInt(a.TT) < parseInt(b.TT)) return -1;
+    return 1;
+}

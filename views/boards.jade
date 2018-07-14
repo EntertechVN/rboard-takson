@@ -1,1 +1,47 @@
 extends layout
+
+block content
+    div#app.row
+        div(v-for="bcon in bcons").col-12
+            table.bcon
+                tr
+                    th ID {{ bcon.BoardID }}
+                    th(colspan=4) Giá trị hiện tại
+                    th(colspan=3).yellow Tham số cài đặt
+                tr
+                    th TT Trạm
+                    th Sản lượng
+                    th Trạng thái đèn
+                    th Tổng phát sinh đèn đỏ
+                    th Tổng phát sinh đèn vàng
+                    th.yellow Cycle time (giây)
+                    th.yellow Cycle đèn vàng
+                    th.yellow Cycle đèn đỏ
+                tr(v-for="lamp in bcon.lamps")
+                    td {{ lamp.TT }}
+                    td {{ lamp.SLThucte }}
+                    td(:class="'lamp-color' + lamp.Light").lamp-color
+                        span
+                    td {{ lamp.CountR }}
+                    td {{ lamp.CountY }}
+
+    script.
+        var socket = io()
+        var app = new Vue({
+            el: '#app',
+            data: {
+                bcons: {}
+            },
+            methods: {
+            }
+        })
+
+        socket.on('connect', function () {
+            console.log('connected')
+            socket.emit('get bcons')
+        })
+
+        socket.on('set bcons', function (bcons) {
+            console.log(bcons)
+            app.bcons = bcons
+        })
