@@ -6,8 +6,14 @@ module.exports = function (io) {
         socket.on('get data', function () {
             console.log('get data event received');
             mongo(function (db) {
-                db.collection("bkds").find().toArray(function (err, result) {
-                    socket.emit('set data', {bkds: result});
+                data = {};
+                db.collection("bkds").find().toArray(function (err, bkds) {
+                    data.bkds = bkds;
+                });
+
+                db.collection("setting").find().toArray(function (err, setting) {
+                    data.setting = setting[0];
+                    socket.emit('set data', data);
                 });
             })
         });
@@ -18,7 +24,8 @@ module.exports = function (io) {
                     {id: 0},
                     {$set: {CycleTime: cycleTime, id: 0}},
                     {upsert: true}
-                )
+                );
+                //socket.emit('data updated')
             })
         });
 
@@ -29,7 +36,8 @@ module.exports = function (io) {
                     {$set: {MTNgay: mtNgay, id: 0}},
                     {upsert: true}
                 );
-            })
+            });
+            socket.emit('data updated')
         });
 
         socket.on('update TimeCa', function (timeArr) {

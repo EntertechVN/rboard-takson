@@ -2,13 +2,13 @@ extends layout
 
 block content
     div#app.row
-        div(v-for="bkd in boards.bkds").col-5
+        div(v-for="bkd in bkds").col-5
             div.board-container
                 table.board
                     tr
                         td MỤC TIÊU NGÀY
                         td
-                            span.value 0
+                            span.value {{ setting.MTNgay }}
                     tr
                         td MỤC TIÊU HIỆN TẠI
                         td
@@ -43,9 +43,8 @@ block content
         var app = new Vue({
             el: '#app',
             data: {
-                boards: {
-                    bkds: [{MThientai: 0, SLThucte: 0}]
-                }
+                bkds: [{MThientai: 0, SLThucte: 0}],
+                setting: {}
             },
 
             methods: {
@@ -53,7 +52,7 @@ block content
                     let elemCycleTime = $('#CycleTime')
                     let cycleTimeValue = elemCycleTime.val()
 
-                    if(parseInt(cycleTimeValue)){
+                    if (parseInt(cycleTimeValue)) {
                         let ok = confirm('Đồng ý cập nhật cycle time với giá trị ' + cycleTimeValue + '?')
 
                         if (ok) {
@@ -91,11 +90,12 @@ block content
             console.log('disconnected')
         })
 
-        socket.on('set data', function (boards) {
-            console.log(boards)
-            app.boards = boards
+        socket.on('set data', function (data) {
+            console.log(data)
+            app.bkds = data.bkds
+            app.setting = data.setting
         })
 
-        socket.on('data updated',function () {
+        socket.on('data updated', function () {
             socket.emit('get data')
         })
