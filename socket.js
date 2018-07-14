@@ -33,7 +33,7 @@ module.exports = function (io) {
                     {upsert: true}
                 )
             })
-        })
+        });
 
         socket.on('get setting', function () {
             console.log('get setting event received');

@@ -15,14 +15,24 @@ module.exports = function (io, port) {
                     mongo(function (db) {
                         db.collection("bkds").update(
                             {BoardID: bkd.BoardID},
-                            bkd,
+                            {$set: bkd},
                             {upsert: true}
                         );
 
-                        db.collection("setting").find().toArray(function (err, result) {
+                        let responseData = {};
+                        db.collection("setting").find().toArray(function (err, setting) {
+                            responseData.setting = setting[0]
+                        });
+
+                        db.collection("bkds").find({BoardID: bkd.BoardID}).toArray(function (err, bkds) {
+                            responseData.bkd = bkds[0];
+                            console.log(responseData.bkd);
+
                             TCPSocket.write(response({
                                 status: 'OK',
-                                ...timeToMinute(result[0])
+                                MTNgay: responseData.bkd.MTNgay,
+                                CycleTime: responseData.bkd.CycleTime,
+                                ...timeToMinute(responseData.setting)
                             }));
                         });
 
@@ -95,8 +105,6 @@ function timeToMinute(objs) {
             rObjs[key] = obj;
         }
     });
-
-    console.log(rObjs);
 
     return rObjs;
 }
