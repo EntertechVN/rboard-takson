@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    div#app.row
+        div#time-setup
+            div.form-group
+                table
+                    tr
+                        td
+                        td Giờ vào
+                        td Giờ ra
+                    tr(v-for="i in (1,12)")
+                        td.float-right Ca {{ i }}:
+                        td
+                            input(type='time', id='TimeCaVao{{ i }}')
+                        td
+                            input(type='time', id='#TimeCaRa{{ i }}')
+                    tr
+                        td(colspan=3)
+                            button#submitTime.float-right Set giờ
+    script.
+        var app = new Vue({
+            el: '#app',
+            data: {
+            }
+        })

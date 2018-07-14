@@ -1,5 +1,6 @@
 let net = require('net');
 let queryString = require('query-string');
+let mongo = require('./mongo');
 module.exports = function (io, port) {
     // create plain TCP socket
     net.createServer(function (TCPSocket) {
@@ -10,8 +11,15 @@ module.exports = function (io, port) {
             console.log('plain TCP message received ', stringMessage);
             if (isValidateMessage(message)) {
                 if (isBKD(message)) {
-                    console.log(parseBKD(stringMessage));
-                    //@TODO SEND MESSAGE
+                    let bkd = parseBKD(stringMessage);
+                    mongo(function (db) {
+                        db.collection("bkds").update(
+                            { BoardID: bkd.BoardID },
+                            bkd,
+                            { upsert: true }
+                        );
+                        io.sockets.emit('data updated')
+                    });
                 } else if (isBCON(message)) {
 
                 }
