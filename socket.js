@@ -85,7 +85,8 @@ class BconLamp {
             if (key.toString().indexOf('Light') !== -1) {
                 let stt = key.toString().split('Light')[1];
                 lamps.push(new Lamp(stt, bcon['CountR' + stt], bcon['CountY' + stt],
-                    bcon['Light' + stt], bcon['SLThucte' + stt]))
+                    bcon['Light' + stt], bcon['SLThucte' + stt], bcon['CytSet' + stt],
+                    bcon['CytYell' + stt], bcon['CytRed' + stt]))
             }
         });
         this.lamps = lamps.sort(lampSort);
@@ -102,12 +103,15 @@ class BconLamp {
 }
 
 class Lamp {
-    constructor(TT, CountR, CountY, Light, SLThucte) {
+    constructor(TT, CountR, CountY, Light, SLThucte, CytSet, CytYell, CytRed) {
         this.TT = TT;
         this.CountR = CountR;
         this.CountY = CountY;
         this.Light = Light;
         this.SLThucte = SLThucte;
+        this.CytSet = CytSet;
+        this.CytYell = CytYell;
+        this.CytRed = CytRed;
     }
 }
 
