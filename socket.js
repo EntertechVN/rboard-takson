@@ -61,6 +61,17 @@ module.exports = function (io) {
                 });
             })
         });
+
+        socket.on('update bcon', function (bcon) {
+            mongo(function (db) {
+                db.collection("bcons").update(
+                    {BoardID: bcon.BoardID},
+                    {$set: bcon},
+                    {upsert: true}
+                );
+            });
+            //socket.emit('bcons updated')
+        });
     });
 };
 

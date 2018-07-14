@@ -20,7 +20,7 @@ block content
                             input(type='time', id='TimeCaRa' + i, :value="setting.TimeCaRa" + i)
                 tr
                     td(colspan=3)
-                        button(v-on:click='submitTime')#submitTime.float-right Set giờ
+                        button(v-on:click='submitTime')#submitTime.float-right Submit
     script.
         var socket = io()
         var app = new Vue({

@@ -7,7 +7,7 @@ block content
                 tr
                     th ID {{ bcon.BoardID }}
                     th(colspan=4) Giá trị hiện tại
-                    th(colspan=3).yellow Tham số cài đặt
+                    th(colspan=4).yellow Tham số cài đặt
                 tr
                     th TT Trạm
                     th Sản lượng
@@ -17,6 +17,7 @@ block content
                     th.yellow Cycle time (giây)
                     th.yellow Cycle đèn vàng
                     th.yellow Cycle đèn đỏ
+                    th.yellow
                 tr(v-for="lamp in bcon.lamps")
                     td {{ lamp.TT }}
                     td {{ lamp.SLThucte }}
@@ -24,6 +25,14 @@ block content
                         span
                     td {{ lamp.CountR }}
                     td {{ lamp.CountY }}
+                    td.yellow
+                        input(type='number', :value="lamp.CytSet", :id="'CytSet' + lamp.TT")
+                    td.yellow
+                        input(type='number', :value="lamp.CytYell", :id="'CytYell' + lamp.TT")
+                    td.yellow
+                        input(type='number', :value="lamp.CytRed", :id="'CytRed' + lamp.TT")
+                    td.yellow
+                        button(v-on:click='submitCyt(lamp.TT, bcon.BoardID)') Set
 
     script.
         var socket = io()
@@ -33,6 +42,18 @@ block content
                 bcons: {}
             },
             methods: {
+                submitCyt: function (TT, BoardID) {
+                    let CytSet = $('#CytSet' + TT).val();
+                    let CytYell = $('#CytYell' + TT).val();
+                    let CytRed = $('#CytRed' + TT).val();
+
+                    let bcon = {}
+                    bcon.BoardID = BoardID;
+                    bcon['CytSet' + TT] = CytSet;
+                    bcon['CytYell' + TT] = CytYell;
+                    bcon['CytRed' + TT] = CytRed;
+                    socket.emit('update bcon', bcon);
+                }
             }
         })
 
