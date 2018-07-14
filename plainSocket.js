@@ -26,7 +26,6 @@ module.exports = function (io, port) {
 
                         db.collection("bkds").find({BoardID: bkd.BoardID}).toArray(function (err, bkds) {
                             responseData.bkd = bkds[0];
-                            console.log(responseData.bkd);
 
                             TCPSocket.write(response({
                                 status: 'OK',
@@ -47,6 +46,21 @@ module.exports = function (io, port) {
                             {$set: bcon},
                             {upsert: true}
                         );
+
+                        let responseData = {};
+                        db.collection("setting").find().toArray(function (err, setting) {
+                            responseData.setting = setting[0]
+                        });
+
+                        db.collection("bcons").find({BoardID: bcon.BoardID}).toArray(function (err, bcons) {
+                            responseData.bcon = bcons[0];
+
+                            TCPSocket.write(response({
+                                status: 'OK',
+                                ...timeToMinute(responseData.setting),
+                                ...filterBcon(responseData.bcon)
+                            }));
+                        });
                     });
                 }
             }
@@ -96,6 +110,18 @@ function timeToMinute(objs) {
             rObjs[key] = parseInt(h) * 60 + parseInt(m);
         } else {
             rObjs[key] = obj;
+        }
+    });
+
+    return rObjs;
+}
+
+function filterBcon(objs) {
+    if (objs == null) return;
+    let rObjs = {};
+    Object.keys(objs).forEach(function (key) {
+        if (key.toString().indexOf('Cyt') !== -1) {
+            rObjs[key] = objs[key];
         }
     });
 
