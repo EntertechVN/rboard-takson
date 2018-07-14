@@ -9,10 +9,6 @@ module.exports = function (io) {
                 data = {};
                 db.collection("bkds").find().toArray(function (err, bkds) {
                     data.bkds = bkds;
-                });
-
-                db.collection("setting").find().toArray(function (err, setting) {
-                    data.setting = setting[0];
                     socket.emit('set data', data);
                 });
             })

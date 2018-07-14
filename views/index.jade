@@ -8,7 +8,7 @@ block content
                     tr
                         td MỤC TIÊU NGÀY
                         td
-                            span.value {{ setting.MTNgay }}
+                            span.value {{ bkd.MTNgay }}
                     tr
                         td MỤC TIÊU HIỆN TẠI
                         td
@@ -43,8 +43,7 @@ block content
         var app = new Vue({
             el: '#app',
             data: {
-                bkds: [{MThientai: 0, SLThucte: 0}],
-                setting: {}
+                bkds: [{MThientai: 0, SLThucte: 0}]
             },
 
             methods: {
@@ -93,7 +92,6 @@ block content
         socket.on('set data', function (data) {
             console.log(data)
             app.bkds = data.bkds
-            app.setting = data.setting
         })
 
         socket.on('data updated', function () {
