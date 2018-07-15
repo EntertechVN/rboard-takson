@@ -13,11 +13,19 @@ html
       div.row
         div.col-2#sidebar
           ul#navbar
-            li
-              a(href='/') Bảng khắc dấu
-            li
-              a(href='/boards') Bảng con
-            li
-              a(href='/setting') Cấu hình ca
+            li Real time
+              ul
+                li
+                  a(href='/') Bảng khắc dấu
+                li
+                  a(href='/boards') Bảng con
+            li History
+              ul
+                li
+                  a(href='/boards/history') Xuất dữ liệu bảng con
+            li Setting
+              ul
+                li
+                  a(href='/setting') Cấu hình ca
         div.col-10#content
           block content
