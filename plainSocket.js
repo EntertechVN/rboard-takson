@@ -56,9 +56,9 @@ module.exports = function (io, port) {
                             responseData.bcon = bcons[0];
 
                             TCPSocket.write(response({
-                                status: 'OK',
+                                Status: 'OK',
+                                ...filterBcon(responseData.bcon),
                                 ...filterSetting(responseData.setting),
-                                ...filterBcon(responseData.bcon)
                             }));
                         });
                     });
@@ -133,19 +133,25 @@ function filterBcon(objs) {
         }
     });
 
-    return rObjs;
+    return sortCyt(rObjs);
 }
 
 function sortCa(setting) {
     let ordered = {};
     for (i = 1; i <= 12; i++) {
-        key = 'TimeCaVao' + i;
-        ordered[key] = setting[key];
+        ordered['TimeCaVao' + i] = setting['TimeCaVao' + i];
+        ordered['TimeCaRa' + i] = setting['TimeCaRa' + i];
     }
 
+    return ordered;
+}
+
+function sortCyt(bcon) {
+    let ordered = {};
     for (i = 1; i <= 12; i++) {
-        key = 'TimeCaRa' + i;
-        ordered[key] = setting[key];
+        ordered['CytSet' + i] = bcon['CytSet' + i] || 0;
+        ordered['CytRed' + i] = bcon['CytRed' + i] || 0;
+        ordered['CytYell' + i] = bcon['CytYell' + i] || 0;
     }
 
     return ordered;
