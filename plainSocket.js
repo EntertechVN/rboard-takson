@@ -28,10 +28,10 @@ module.exports = function (io, port) {
                             responseData.bkd = bkds[0];
 
                             TCPSocket.write(response({
-                                status: 'OK',
-                                MTNgay: responseData.bkd.MTNgay,
-                                CycleTime: responseData.bkd.CycleTime,
-                                ...timeToMinute(responseData.setting)
+                                Status: 'OK',
+                                MTNgay: responseData.bkd.MTNgay || 0,
+                                CycleTime: responseData.bkd.CycleTime || 0,
+                                ...filterSetting(responseData.setting)
                             }));
                         });
 
@@ -57,7 +57,7 @@ module.exports = function (io, port) {
 
                             TCPSocket.write(response({
                                 status: 'OK',
-                                ...timeToMinute(responseData.setting),
+                                ...filterSetting(responseData.setting),
                                 ...filterBcon(responseData.bcon)
                             }));
                         });
@@ -95,11 +95,17 @@ function isBCON(message) {
     return message && message.toString().indexOf(B_CON) !== -1;
 }
 
-function response(data) {
-    return queryString.stringify(data)
+function response(object) {
+    console.log(object);
+    let responseString = '';
+    Object.keys(object).forEach(function (key) {
+        responseString += key + '=' + object[key] + '&';
+    });
+
+    return responseString.slice(0, -1);
 }
 
-function timeToMinute(objs) {
+function filterSetting(objs) {
     if (objs == null) return;
     let rObjs = {};
     Object.keys(objs).forEach(function (key) {
@@ -109,11 +115,13 @@ function timeToMinute(objs) {
             m = obj.split(':')[1];
             rObjs[key] = parseInt(h) * 60 + parseInt(m);
         } else {
-            rObjs[key] = obj;
+            if (key.toString().indexOf('TimeCa') !== -1) {
+                rObjs[key] = 0;
+            }
         }
     });
 
-    return rObjs;
+    return sortCa(rObjs);
 }
 
 function filterBcon(objs) {
@@ -126,4 +134,19 @@ function filterBcon(objs) {
     });
 
     return rObjs;
+}
+
+function sortCa(setting) {
+    let ordered = {};
+    for (i = 1; i <= 12; i++) {
+        key = 'TimeCaVao' + i;
+        ordered[key] = setting[key];
+    }
+
+    for (i = 1; i <= 12; i++) {
+        key = 'TimeCaRa' + i;
+        ordered[key] = setting[key];
+    }
+
+    return ordered;
 }
