@@ -26,22 +26,22 @@ block content
                     tr
                         td CHÊNH LỆCH
                         td
-                            span.value 0
+                            span.value {{ displayChenhLech(bkd.MThientai, bkd.SLThucte) }}
                     tr
                         td HIỆU SUẤT (%)
                         td
-                            span.value 0
+                            span.value {{ displayHieuSuat(bkd.SLThucte, bkd.MTNgay) }}
                             span  %
             div
                 table#bkd-setting
                     tr
                         td  Cycle (giây):
-                            input(type='number', :id="'CycleTime' + bkd.BoardID")
+                            input(type='number', :id="'CycleTime' + bkd.BoardID", :value="bkd.CycleTime")
                         td
                             button(v-on:click='submitCycleTime(bkd.BoardID)') Submit
                     tr
                         td  Mục tiêu ngày:
-                            input(type='number', :id="'MTNgay' + bkd.BoardID")
+                            input(type='number', :id="'MTNgay' + bkd.BoardID", :value="bkd.MTNgay")
                         td
                             button(v-on:click='submitMTNgay(bkd.BoardID)') Submit
     script.
@@ -62,9 +62,6 @@ block content
 
                         if (ok) {
                             socket.emit('update bkd', {BoardID: boardID, CycleTime: cycleTimeValue})
-
-                            // empty the value
-                            elemCycleTime.val('')
                         }
                     }
                 },
@@ -77,9 +74,6 @@ block content
 
                         if (ok) {
                             socket.emit('update bkd', {BoardID: boardID, MTNgay: mtNgayValue})
-
-                            // empty the value
-                            elemMTNgay.val('')
                         }
                     }
                 },
@@ -87,6 +81,14 @@ block content
                     if (confirm('Đồng ý xóa bảng này?')) {
                         socket.emit('delete bkd', BoardID)
                     }
+                },
+
+                displayChenhLech: function (hienTai, thucTe) {
+                    return parseInt(hienTai) - parseInt(thucTe)
+                },
+
+                displayHieuSuat: function (thucTe, mtNgay) {
+                    return Math.round((parseInt(thucTe) * 100) / parseInt(mtNgay))
                 }
             }
         })
