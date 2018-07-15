@@ -1,1 +1,72 @@
 extends layout
+
+block content
+    div#app.row
+        div.col-12#date-setting
+            div.form-group
+                label(for="#date-picker") Chọn ngày hiển thị:
+                input(type="text")#date-picker
+                button(v-on:click='changeDate()')#date-submit Submit
+            h3  Dữ liệu ngày {{ dateStr }}
+        div(v-for="bcon in bcons").col-12
+            table.bcon
+                tr
+                    th ID {{ bcon.BoardID }}
+                    th(colspan=4) Giá trị hiện tại
+                    th(colspan=4).yellow Tham số cài đặt
+                        div.float-right
+                            span(v-on:click='deleteBcon(bcon.BoardID)').board-delete
+                tr
+                    th TT Trạm
+                    th Sản lượng
+                    th Trạng thái đèn
+                    th Tổng phát sinh đèn đỏ
+                    th Tổng phát sinh đèn vàng
+                    th.yellow Cycle time (giây)
+                    th.yellow Cycle đèn vàng
+                    th.yellow Cycle đèn đỏ
+                tr(v-for="lamp in bcon.lamps")
+                    td {{ lamp.TT }}
+                    td {{ lamp.SLThucte }}
+                    td(:class="'lamp-color' + lamp.Light").lamp-color
+                        span
+                    td {{ lamp.CountR }}
+                    td {{ lamp.CountY }}
+                    td.yellow
+                        input(disabled, type='number', :value="lamp.CytSet", :id="'CytSet' + lamp.TT").text-center
+                    td.yellow
+                        input(disabled, type='number', :value="lamp.CytYell", :id="'CytYell' + lamp.TT").text-center
+                    td.yellow
+                        input(disabled, type='number', :value="lamp.CytRed", :id="'CytRed' + lamp.TT").text-center
+
+    script.
+        var socket = io()
+        var app = new Vue({
+            el: '#app',
+            data: {
+                bcons: {},
+                dateStr: moment().format('D/M/Y')
+            },
+            methods: {
+                changeDate: function () {
+                    let dateValue = $('#date-picker').val();
+                    app.dateStr = moment(dateValue,'D/M/Y').format('D/M/Y');
+                }
+            }
+        })
+
+        socket.on('connect', function () {
+            console.log('connected')
+            socket.emit('get bcons')
+        })
+
+        socket.on('set bcons', function (bcons) {
+            console.log(bcons)
+            app.bcons = bcons
+        })
+
+        $('#date-picker').datepicker({
+            format: "dd/mm/yyyy",
+            language: "vi"
+        });
+
