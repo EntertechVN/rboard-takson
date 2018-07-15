@@ -8,6 +8,8 @@ block content
                     th ID {{ bcon.BoardID }}
                     th(colspan=4) Giá trị hiện tại
                     th(colspan=4).yellow Tham số cài đặt
+                        div.float-right
+                            span(v-on:click='deleteBcon(bcon.BoardID)').board-delete
                 tr
                     th TT Trạm
                     th Sản lượng
@@ -53,6 +55,12 @@ block content
                     bcon['CytYell' + TT] = CytYell;
                     bcon['CytRed' + TT] = CytRed;
                     socket.emit('update bcon', bcon);
+                },
+
+                deleteBcon: function (BoardID) {
+                    if (confirm('Đồng ý xóa bảng này?')) {
+                        socket.emit('delete bcon', BoardID)
+                    }
                 }
             }
         })
@@ -62,7 +70,13 @@ block content
             socket.emit('get bcons')
         })
 
+        socket.on('bcons updated', function () {
+            console.log('bcons updated')
+            socket.emit('get bcons')
+        })
+
         socket.on('set bcons', function (bcons) {
             console.log(bcons)
             app.bcons = bcons
         })
+

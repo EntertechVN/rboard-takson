@@ -61,6 +61,8 @@ module.exports = function (io, port) {
                                 ...filterSetting(responseData.setting),
                             }));
                         });
+
+                        io.sockets.emit('bcons updated')
                     });
                 }
             }

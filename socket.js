@@ -70,7 +70,16 @@ module.exports = function (io) {
                     {upsert: true}
                 );
             });
-            //socket.emit('bcons updated')
+            socket.emit('bcons updated')
+        });
+
+        socket.on('delete bcon', function (BoardID) {
+            mongo(function (db) {
+                db.collection("bcons").removeOne(
+                    {BoardID: BoardID}
+                );
+            });
+            socket.emit('bcons updated')
         });
     });
 };

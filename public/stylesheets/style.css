@@ -55,17 +55,17 @@ input[type="number"] {
   .board-delete:hover {
     cursor: pointer; }
 
-.bcon td, .bcon th {
-  border: 1px solid black;
-  text-align: center;
-  background: white;
-  padding: 5px; }
-
-.bcon th {
-  font-weight: bold; }
-
-.bcon .yellow {
-  background: #ffffbc; }
+.bcon {
+  margin-bottom: 10px; }
+  .bcon td, .bcon th {
+    border: 1px solid black;
+    text-align: center;
+    background: white;
+    padding: 5px; }
+  .bcon th {
+    font-weight: bold; }
+  .bcon .yellow {
+    background: #ffffbc; }
 
 .lamp-color span {
   display: block;
