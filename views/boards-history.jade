@@ -8,7 +8,7 @@ block content
                 input(type="text")#date-picker
                 button(v-on:click='changeDate()')#date-submit Submit
             h3  Dữ liệu ngày {{ dateStr }}
-        div(v-for="bcon in bcons").col-12
+        div(v-for="bcon in bcons").col-12.mb-5
             table.bcon
                 tr
                     th ID {{ bcon.BoardID }}
@@ -38,6 +38,7 @@ block content
                         input(disabled, type='number', :value="lamp.CytYell", :id="'CytYell' + lamp.TT").text-center
                     td.yellow
                         input(disabled, type='number', :value="lamp.CytRed", :id="'CytRed' + lamp.TT").text-center
+            button  Xuất dữ liệu
 
     script.
         var socket = io()
