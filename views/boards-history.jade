@@ -32,12 +32,9 @@ block content
                         span
                     td {{ lamp.CountR }}
                     td {{ lamp.CountY }}
-                    td.yellow
-                        input(disabled, type='number', :value="lamp.CytSet", :id="'CytSet' + lamp.TT").text-center
-                    td.yellow
-                        input(disabled, type='number', :value="lamp.CytYell", :id="'CytYell' + lamp.TT").text-center
-                    td.yellow
-                        input(disabled, type='number', :value="lamp.CytRed", :id="'CytRed' + lamp.TT").text-center
+                    td.yellow {{ lamp.CytSet }}
+                    td.yellow {{ lamp.CytYell }}
+                    td.yellow {{ lamp.CytRed }}
             button  Xuất dữ liệu
 
     script.
