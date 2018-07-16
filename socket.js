@@ -1,4 +1,5 @@
 let mongo = require('./mongo');
+let moment = require('moment');
 module.exports = function (io) {
     io.on('connection', function (socket) {
         console.log('a client connected');
@@ -66,6 +67,14 @@ module.exports = function (io) {
             mongo(function (db) {
                 db.collection("bcons").update(
                     {BoardID: bcon.BoardID},
+                    {$set: bcon},
+                    {upsert: true}
+                );
+
+                // save to history
+                bcon.date = moment().format('D/M/Y');
+                db.collection("bcons-history").update(
+                    {BoardID: bcon.BoardID, date: bcon.date},
                     {$set: bcon},
                     {upsert: true}
                 );

@@ -1,6 +1,7 @@
 let net = require('net');
 let queryString = require('query-string');
 let mongo = require('./mongo');
+let moment = require('moment');
 module.exports = function (io, port) {
     // create plain TCP socket
     net.createServer(function (TCPSocket) {
@@ -43,6 +44,14 @@ module.exports = function (io, port) {
                     mongo(function (db) {
                         db.collection("bcons").update(
                             {BoardID: bcon.BoardID},
+                            {$set: bcon},
+                            {upsert: true}
+                        );
+
+                        // save to history
+                        bcon.date = moment().format('D/M/Y');
+                        db.collection("bcons-history").update(
+                            {BoardID: bcon.BoardID, date: bcon.date},
                             {$set: bcon},
                             {upsert: true}
                         );
