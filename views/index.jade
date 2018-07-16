@@ -35,13 +35,15 @@ block content
             div
                 table#bkd-setting
                     tr
-                        td  Cycle (giây):
-                            input(type='number', :id="'CycleTime' + bkd.BoardID", :value="bkd.CycleTime")
+                        td  Cycle (giây): {{ bkd.CycleTime }}
+                            span.mr-2
+                            input(type='number', :id="'CycleTime' + bkd.BoardID")
                         td
                             button(v-on:click='submitCycleTime(bkd.BoardID)') Submit
                     tr
-                        td  Mục tiêu ngày:
-                            input(type='number', :id="'MTNgay' + bkd.BoardID", :value="bkd.MTNgay")
+                        td  Mục tiêu ngày: {{ bkd.MTNgay }}
+                            span.mr-2
+                            input(type='number', :id="'MTNgay' + bkd.BoardID")
                         td
                             button(v-on:click='submitMTNgay(bkd.BoardID)') Submit
     script.
@@ -64,6 +66,7 @@ block content
                             socket.emit('update bkd', {BoardID: boardID, CycleTime: cycleTimeValue})
                         }
                     }
+                    elemCycleTime.val('')
                 },
                 submitMTNgay: function (boardID) {
                     let elemMTNgay = $('#MTNgay' + boardID)
@@ -76,6 +79,7 @@ block content
                             socket.emit('update bkd', {BoardID: boardID, MTNgay: mtNgayValue})
                         }
                     }
+                    elemMTNgay.val('')
                 },
                 deleteBKD: function (BoardID) {
                     if (confirm('Đồng ý xóa bảng này?')) {
