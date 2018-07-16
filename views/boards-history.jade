@@ -35,7 +35,7 @@ block content
                     td.yellow {{ lamp.CytSet }}
                     td.yellow {{ lamp.CytYell }}
                     td.yellow {{ lamp.CytRed }}
-            button  Xuất dữ liệu
+            a(:href="'/boards/history/export?BoardID=' + bcon.BoardID + '&date=' + dateStr").btn.btn-success Xuất dữ liệu
 
     script.
         var socket = io()
