@@ -12,7 +12,7 @@ module.exports = function (io, port) {
             console.log('plain TCP message received ', stringMessage);
             if (isValidateMessage(message)) {
                 if (isBKD(message)) {
-                    let bkd = queryString.parse(stringMessage);
+                    let bkd = parseQuery(stringMessage);
                     mongo(function (db) {
                         db.collection("bkds").update(
                             {BoardID: bkd.BoardID},
@@ -39,7 +39,7 @@ module.exports = function (io, port) {
                         io.sockets.emit('bkds updated')
                     });
                 } else if (isBCON(message)) {
-                    let bcon = queryString.parse(stringMessage);
+                    let bcon = parseQuery(stringMessage);
 
                     mongo(function (db) {
                         db.collection("bcons").update(
@@ -166,4 +166,15 @@ function sortCyt(bcon) {
     }
 
     return ordered;
+}
+
+function parseQuery(message) {
+    let parsed = queryString.parse(message);
+    Object.keys(parsed).forEach(function (key) {
+        if (Array.isArray(parsed[key])) {
+            parsed[key] = parsed[key][0].replace('Manufactor', '');
+        }
+    });
+
+    return parsed;
 }
