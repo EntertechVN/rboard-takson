@@ -28,11 +28,14 @@ block content
                     td {{ lamp.CountR }}
                     td {{ lamp.CountY }}
                     td.yellow
-                        input(type='number', :value="lamp.CytSet", :id="'CytSet' + lamp.TT")
+                        span.mr-2 {{ lamp.CytSet }}
+                        input(type='number', :id="'CytSet' + lamp.TT")
                     td.yellow
-                        input(type='number', :value="lamp.CytYell", :id="'CytYell' + lamp.TT")
+                        span.mr-2 {{ lamp.CytYell }}
+                        input(type='number', :id="'CytYell' + lamp.TT")
                     td.yellow
-                        input(type='number', :value="lamp.CytRed", :id="'CytRed' + lamp.TT")
+                        span.mr-2 {{ lamp.CytRed }}
+                        input(type='number', :id="'CytRed' + lamp.TT")
                     td.yellow
                         button(v-on:click='submitCyt(lamp.TT, bcon.BoardID)') Set
 
@@ -45,9 +48,13 @@ block content
             },
             methods: {
                 submitCyt: function (TT, BoardID) {
-                    let CytSet = $('#CytSet' + TT).val();
-                    let CytYell = $('#CytYell' + TT).val();
-                    let CytRed = $('#CytRed' + TT).val();
+                    let setElem = $('#CytSet' + TT);
+                    let yellElem = $('#CytYell' + TT);
+                    let redElem = $('#CytRed' + TT);
+
+                    let CytSet = setElem.val();
+                    let CytYell = yellElem.val();
+                    let CytRed = redElem.val();
 
                     let bcon = {}
                     bcon.BoardID = BoardID;
@@ -55,6 +62,10 @@ block content
                     bcon['CytYell' + TT] = CytYell;
                     bcon['CytRed' + TT] = CytRed;
                     socket.emit('update bcon', bcon);
+
+                    setElem.val('');
+                    yellElem.val('');
+                    redElem.val('');
                 },
 
                 deleteBcon: function (BoardID) {
