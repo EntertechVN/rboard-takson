@@ -29,13 +29,13 @@ block content
                     td {{ lamp.CountY }}
                     td.yellow
                         span.mr-2 {{ lamp.CytSet }}
-                        input(type='number', :id="'CytSet' + lamp.TT")
+                        input(type='number', :id="'CytSet' + lamp.TT + bcon.BoardID")
                     td.yellow
                         span.mr-2 {{ lamp.CytYell }}
-                        input(type='number', :id="'CytYell' + lamp.TT")
+                        input(type='number', :id="'CytYell' + lamp.TT + bcon.BoardID")
                     td.yellow
                         span.mr-2 {{ lamp.CytRed }}
-                        input(type='number', :id="'CytRed' + lamp.TT")
+                        input(type='number', :id="'CytRed' + lamp.TT + bcon.BoardID")
                     td.yellow
                         button(v-on:click='submitCyt(lamp.TT, bcon.BoardID)') Set
 
@@ -48,24 +48,29 @@ block content
             },
             methods: {
                 submitCyt: function (TT, BoardID) {
-                    let setElem = $('#CytSet' + TT);
-                    let yellElem = $('#CytYell' + TT);
-                    let redElem = $('#CytRed' + TT);
+                    let setElem = $('#CytSet' + TT + BoardID);
+                    let yellElem = $('#CytYell' + TT + BoardID);
+                    let redElem = $('#CytRed' + TT + BoardID);
+
 
                     let CytSet = setElem.val();
                     let CytYell = yellElem.val();
                     let CytRed = redElem.val();
 
-                    let bcon = {}
-                    bcon.BoardID = BoardID;
-                    bcon['CytSet' + TT] = CytSet;
-                    bcon['CytYell' + TT] = CytYell;
-                    bcon['CytRed' + TT] = CytRed;
-                    socket.emit('update bcon', bcon);
+                    if (CytSet && CytYell && CytRed) {
+                        let bcon = {}
+                        bcon.BoardID = BoardID;
+                        bcon['CytSet' + TT] = CytSet;
+                        bcon['CytYell' + TT] = CytYell;
+                        bcon['CytRed' + TT] = CytRed;
+                        socket.emit('update bcon', bcon);
 
-                    setElem.val('');
-                    yellElem.val('');
-                    redElem.val('');
+                        setElem.val('');
+                        yellElem.val('');
+                        redElem.val('');
+                    } else {
+                        alert("Vui lòng điền đầy đủ giá trị");
+                    }
                 },
 
                 deleteBcon: function (BoardID) {

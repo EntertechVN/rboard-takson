@@ -90,6 +90,24 @@ module.exports = function (io) {
             });
             socket.emit('bcons updated')
         });
+
+        socket.on('get bcons-history', function (dateStr) {
+            console.log('get bcons-history event received');
+            mongo(function (db) {
+                db.collection("bcons-history").find({date: dateStr}).toArray(function (err, bcons) {
+                    socket.emit('set bcons-history', BconLamp.createMulti(bcons));
+                });
+            })
+        });
+
+        socket.on('delete bcon-history', function (bcon) {
+            mongo(function (db) {
+                db.collection("bcons-history").removeOne(
+                    {date: bcon.date, BoardID: bcon.BoardID}
+                );
+            });
+            socket.emit('bcon-history updated')
+        });
     });
 };
 

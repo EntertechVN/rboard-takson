@@ -15,7 +15,7 @@ block content
                     th(colspan=4) Giá trị hiện tại
                     th(colspan=4).yellow Tham số cài đặt
                         div.float-right
-                            span(v-on:click='deleteBcon(bcon.BoardID)').board-delete
+                            span(v-on:click='deleteBconHistory(bcon.BoardID)').board-delete
                 tr
                     th TT Trạm
                     th Sản lượng
@@ -48,19 +48,31 @@ block content
             methods: {
                 changeDate: function () {
                     let dateValue = $('#date-picker').val();
-                    app.dateStr = moment(dateValue,'D/M/Y').format('D/M/Y');
+                    app.dateStr = moment(dateValue, 'D/M/Y').format('D/M/Y');
+
+                    socket.emit('get bcons-history', app.dateStr);
+                },
+
+                deleteBconHistory: function (BoardID) {
+                    if (confirm('Đồng ý xóa lịch sử bảng này?')) {
+                        socket.emit('delete bcon-history', {date: app.dateStr, BoardID: BoardID});
+                    }
                 }
             }
         })
 
         socket.on('connect', function () {
             console.log('connected')
-            socket.emit('get bcons')
+            socket.emit('get bcons-history', app.dateStr)
         })
 
-        socket.on('set bcons', function (bcons) {
+        socket.on('set bcons-history', function (bcons) {
             console.log(bcons)
             app.bcons = bcons
+        })
+
+        socket.on('bcon-history updated', function () {
+            socket.emit('get bcons-history', app.dateStr)
         })
 
         $('#date-picker').datepicker({
