@@ -57,20 +57,22 @@ block content
                     let CytYell = yellElem.val();
                     let CytRed = redElem.val();
 
-                    if (CytSet && CytYell && CytRed) {
-                        let bcon = {}
-                        bcon.BoardID = BoardID;
-                        bcon['CytSet' + TT] = CytSet;
-                        bcon['CytYell' + TT] = CytYell;
-                        bcon['CytRed' + TT] = CytRed;
-                        socket.emit('update bcon', bcon);
-
-                        setElem.val('');
-                        yellElem.val('');
-                        redElem.val('');
-                    } else {
-                        alert("Vui lòng điền đầy đủ giá trị");
+                    let bcon = {}
+                    bcon.BoardID = BoardID;
+                    if (CytSet) {
+                        bcon['CytSet' + TT] = CytSet
                     }
+                    if (CytYell) {
+                        bcon['CytYell' + TT] = CytYell
+                    }
+                    if (CytRed) {
+                        bcon['CytRed' + TT] = CytRed;
+                    }
+
+                    socket.emit('update bcon', bcon);
+                    setElem.val('');
+                    yellElem.val('');
+                    redElem.val('');
                 },
 
                 deleteBcon: function (BoardID) {
