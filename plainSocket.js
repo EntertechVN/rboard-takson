@@ -48,14 +48,6 @@ module.exports = function (io, port) {
                             {upsert: true}
                         );
 
-                        // save to history
-                        bcon.date = moment().format('D/M/Y');
-                        db.collection("bcons-history").update(
-                            {BoardID: bcon.BoardID, date: bcon.date},
-                            {$set: bcon},
-                            {upsert: true}
-                        );
-
                         let responseData = {};
                         db.collection("setting").find().toArray(function (err, setting) {
                             responseData.setting = setting[0]
@@ -72,6 +64,25 @@ module.exports = function (io, port) {
                         });
 
                         io.sockets.emit('bcons updated')
+                    });
+
+                    // save to history
+                    mongo(function (db) {
+                        (async () => {
+                            bcons = await db.collection("bcons").find({BoardID: bcon.BoardID}).toArray();
+                            if (bcons.length > 0) {
+                                let bconCopy = bcons[0];
+                                bconCopy.date = moment().format('D/M/Y');
+
+                                mongo(function (db) {
+                                    db.collection("bcons-history").update(
+                                        {BoardID: bconCopy.BoardID, date: bconCopy.date},
+                                        {$set: bconCopy},
+                                        {upsert: true}
+                                    );
+                                })
+                            }
+                        })()
                     });
                 }
             }
@@ -107,7 +118,7 @@ function isBCON(message) {
 }
 
 function response(object) {
-    console.log(object);
+    //console.log(object);
     let responseString = '';
     Object.keys(object).forEach(function (key) {
         responseString += key + '=' + object[key] + '&';
