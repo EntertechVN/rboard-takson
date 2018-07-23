@@ -16,19 +16,19 @@ module.exports = function (io, port) {
         let clientName = TCPSocket.nickname;
 
         sockets[clientName] = TCPSocket;
-        TCPSocket.on('close', function() {
+        TCPSocket.on('close', function () {
             delete sockets[clientName];
         });
 
         console.log('TCP created on port 5000', clientName);
 
-        TCPSocket.on('timeout',function () {
+        TCPSocket.on('timeout', function () {
             TCPSocket.write('PING');
         });
 
         TCPSocket.on('data', function (message) {
             stringMessage = message.toString();
-            console.log('plain TCP message received ', stringMessage);
+            console.log('TCP message received', clientName, stringMessage);
             if (isValidateMessage(message)) {
                 if (isBKD(message)) {
                     let bkd = parseQuery(stringMessage);
