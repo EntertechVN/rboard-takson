@@ -2,10 +2,29 @@ let net = require('net');
 let queryString = require('query-string');
 let mongo = require('./mongo');
 let moment = require('moment');
+
+let TCPClients = 0;
+let sockets = Object.create(null);
+
 module.exports = function (io, port) {
     // create plain TCP socket
     net.createServer(function (TCPSocket) {
-        console.log('TCP created on port 5000');
+        TCPSocket.setTimeout(5000);
+
+        TCPClients++;
+        TCPSocket.nickname = "Con# " + TCPClients;
+        let clientName = TCPSocket.nickname;
+
+        sockets[clientName] = TCPSocket;
+        TCPSocket.on('close', function() {
+            delete sockets[clientName];
+        });
+
+        console.log('TCP created on port 5000', clientName);
+
+        TCPSocket.on('timeout',function () {
+            TCPSocket.write('PING');
+        });
 
         TCPSocket.on('data', function (message) {
             stringMessage = message.toString();
