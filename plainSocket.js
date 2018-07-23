@@ -73,6 +73,8 @@ module.exports = function (io, port) {
                             if (bcons.length > 0) {
                                 let bconCopy = bcons[0];
                                 bconCopy.date = moment().format('D/M/Y');
+                                // prevent duplicate ID
+                                delete bconCopy._id;
 
                                 mongo(function (db) {
                                     db.collection("bcons-history").update(
