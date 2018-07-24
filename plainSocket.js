@@ -9,7 +9,7 @@ let sockets = Object.create(null);
 module.exports = function (io, port) {
     // create plain TCP socket
     net.createServer(function (TCPSocket) {
-        TCPSocket.setTimeout(5000);
+        TCPSocket.setTimeout(10000);
 
         TCPClients++;
         TCPSocket.nickname = "Con# " + TCPClients;
@@ -23,7 +23,8 @@ module.exports = function (io, port) {
         console.log('TCP created on port 5000', clientName);
 
         TCPSocket.on('timeout', function () {
-            TCPSocket.write('PING');
+            TCPSocket.destroy();
+            delete sockets[clientName];
         });
 
         TCPSocket.on('data', function (message) {
