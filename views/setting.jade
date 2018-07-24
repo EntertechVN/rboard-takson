@@ -2,7 +2,29 @@ extends layout
 
 block content
     div#app.row
-        div#time-setup.col-6
+        div#time-setup-bkd.col-4
+            h2 Bảng khắc dấu
+            table
+                tr
+                    td
+                    td Giờ vào
+                    td Giờ ra
+                - for (i=1;i<=12;i++)
+                    tr
+                        if((i + 3) % 4 === 0)
+                            td.float-right= 'Ca ' + (i + 3) / 4 + ': '
+                        else
+                            td
+                        td
+                            input(type='time', id='TimeCaVaoBKD' + i, :value="settingBKD.TimeCaVao" + i)
+                        td
+                            input(type='time', id='TimeCaRaBKD' + i, :value="settingBKD.TimeCaRa" + i)
+                tr
+                    td(colspan=3)
+                        button(v-on:click='submitTimeBKD')#submitTimeBKD.float-right Submit
+
+        div#time-setup.col-4
+            h2 Bảng con
             table
                 tr
                     td
@@ -26,7 +48,8 @@ block content
         var app = new Vue({
             el: '#app',
             data: {
-                setting: {}
+                setting: {},
+                settingBKD: {}
             },
             methods: {
                 submitTime: function () {
@@ -39,8 +62,22 @@ block content
                     }
 
                     console.log(timeArr)
-                    if (confirm('Xác nhận điều chỉnh thời gian các ca?')){
+                    if (confirm('Xác nhận điều chỉnh thời gian các ca Bảng con?')){
                         socket.emit('update TimeCa', timeArr)
+                    }
+                },
+                submitTimeBKD: function () {
+                    let timeArr = {}
+                    for (i = 1; i <= 12; i++) {
+                        let cavaoKey = 'TimeCaVao' + i
+                        let caraKey = 'TimeCaRa' + i
+                        timeArr[cavaoKey] = $('#TimeCaVaoBKD' + i).val()
+                        timeArr[caraKey] = $('#TimeCaRaBKD' + i).val()
+                    }
+
+                    console.log(timeArr)
+                    if (confirm('Xác nhận điều chỉnh thời gian các ca Bảng khắc dấu?')) {
+                        socket.emit('update TimeCaBKD', timeArr)
                     }
                 }
             }
@@ -51,6 +88,14 @@ block content
             socket.emit('get setting')
         })
 
-        socket.on('set setting', function (setting) {
-            app.setting = setting
+        socket.on('set setting', function (settings) {
+            settings.forEach(function (st) {
+                if (st.id === 0){
+                    app.setting = st
+                }
+
+                if(st.id === 1){
+                    app.settingBKD = st
+                }
+            })
         })

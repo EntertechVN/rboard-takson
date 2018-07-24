@@ -36,10 +36,22 @@ module.exports = function (io) {
         });
 
         socket.on('update TimeCa', function (timeArr) {
+            let id = 0;
             mongo(function (db) {
                 db.collection("setting").update(
-                    {id: 0},
-                    {$set: {...timeArr, id: 0}},
+                    {id: id},
+                    {$set: {...timeArr, id: id}},
+                    {upsert: true}
+                )
+            })
+        });
+
+        socket.on('update TimeCaBKD', function (timeArr) {
+            let id = 1;
+            mongo(function (db) {
+                db.collection("setting").update(
+                    {id: id},
+                    {$set: {...timeArr, id: id}},
                     {upsert: true}
                 )
             })
@@ -48,8 +60,8 @@ module.exports = function (io) {
         socket.on('get setting', function () {
             console.log('get setting event received');
             mongo(function (db) {
-                db.collection("setting").find().toArray(function (err, setting) {
-                    socket.emit('set setting', setting[0]);
+                db.collection("setting").find().toArray(function (err, settings) {
+                    socket.emit('set setting', settings);
                 });
             })
         });
