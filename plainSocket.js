@@ -41,7 +41,7 @@ module.exports = function (io, port) {
                         );
 
                         let responseData = {};
-                        db.collection("setting").find().toArray(function (err, setting) {
+                        db.collection("setting").find({id: 1}).toArray(function (err, setting) {
                             responseData.setting = setting[0]
                         });
 
@@ -69,7 +69,7 @@ module.exports = function (io, port) {
                         );
 
                         let responseData = {};
-                        db.collection("setting").find().toArray(function (err, setting) {
+                        db.collection("setting").find({id: 0}).toArray(function (err, setting) {
                             responseData.setting = setting[0]
                         });
 
