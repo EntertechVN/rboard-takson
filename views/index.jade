@@ -37,16 +37,25 @@ block content
                 table#bkd-setting
                     tr
                         td  Cycle (giây): {{ bkd.CycleTime }}
-                            span.mr-2
                             input(type='number', :id="'CycleTime' + bkd.BoardID")
                         td
-                            button(v-on:click='submitCycleTime(bkd.BoardID)') Submit
+                            button.mr-2(v-on:click='submitCycleTime(bkd.BoardID)') OK
+
+                        td  Sản lượng TT: {{ bkd.SLThucte }}
+                            input(type='number', :id="'SLThucte' + bkd.BoardID")
+                        td
+                            button(v-on:click='submitSLThucte(bkd.BoardID)') OK
                     tr
                         td  Mục tiêu ngày: {{ bkd.MTNgay }}
-                            span.mr-2
                             input(type='number', :id="'MTNgay' + bkd.BoardID")
                         td
-                            button(v-on:click='submitMTNgay(bkd.BoardID)') Submit
+                            button.mr-2(v-on:click='submitMTNgay(bkd.BoardID)') OK
+
+                        td  Mục tiêu HT: {{ bkd.MThientai }}
+                            input(type='number', :id="'MThientai' + bkd.BoardID")
+                        td
+                            button(v-on:click='submitMThientai(bkd.BoardID)') OK
+
     script.
         var socket = io()
         var app = new Vue({
@@ -82,6 +91,33 @@ block content
                     }
                     elemMTNgay.val('')
                 },
+                submitSLThucte: function (boardID) {
+                    let elem = $('#SLThucte' + boardID)
+                    let value = elem.val()
+
+                    if (parseInt(value)) {
+                        let ok = confirm('Đồng ý cập nhật sản lượng TT với giá trị ' + value + '?')
+
+                        if (ok) {
+                            socket.emit('update bkd', {BoardID: boardID, SLThucte: value})
+                        }
+                    }
+                    elem.val('')
+                },
+                submitMThientai: function (boardID) {
+                    let elem = $('#MThientai' + boardID)
+                    let value = elem.val()
+
+                    if (parseInt(value)) {
+                        let ok = confirm('Đồng ý cập nhật mục tiêu HT với giá trị ' + value + '?')
+
+                        if (ok) {
+                            socket.emit('update bkd', {BoardID: boardID, MThientai: value})
+                        }
+                    }
+                    elem.val('')
+                },
+
                 deleteBKD: function (BoardID) {
                     if (confirm('Đồng ý xóa bảng này?')) {
                         socket.emit('delete bkd', BoardID)

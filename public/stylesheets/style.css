@@ -48,6 +48,9 @@ input[type="number"] {
 #bkd-setting td {
   text-align: right; }
 
+#bkd-setting input[type="number"] {
+  width: 70px; }
+
 .board-delete {
   display: block;
   color: red; }
