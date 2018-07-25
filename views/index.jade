@@ -24,9 +24,10 @@ block content
                         td
                             span.value {{ bkd.SLThucte }}
                     tr
-                        td CHÊNH LỆCH
+                        td TỈ LỆ (%)
                         td
                             span.value {{ displayChenhLech(bkd.MThientai, bkd.SLThucte) }}
+                            span  %
                     tr
                         td HIỆU SUẤT (%)
                         td
@@ -88,7 +89,7 @@ block content
                 },
 
                 displayChenhLech: function (hienTai, thucTe) {
-                    return parseInt(hienTai) - parseInt(thucTe)
+                    return Math.round((parseInt(thucTe) * 100) / parseInt(hienTai))
                 },
 
                 displayHieuSuat: function (thucTe, mtNgay) {
