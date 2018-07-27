@@ -42,7 +42,7 @@ block content
                             button(v-on:click='submitCycleTime(bkd.BoardID)') OK
 
                         td
-                            p Sản lượng TT: {{ bkd.SLThucte }}
+                            p Sản lượng thực tế: {{ bkd.SLThucte }}
                             input(type='number', :id="'SLThucte' + bkd.BoardID")
                             button(v-on:click='submitSLThucte(bkd.BoardID)') OK
                     tr
@@ -51,7 +51,7 @@ block content
                             input(type='number', :id="'MTNgay' + bkd.BoardID")
                             button(v-on:click='submitMTNgay(bkd.BoardID)') OK
                         td
-                            p Mục tiêu HT: {{ bkd.MThientai }}
+                            p Mục tiêu hiện tại: {{ bkd.MThientai }}
                             input(type='number', :id="'MThientai' + bkd.BoardID")
                             button(v-on:click='submitMThientai(bkd.BoardID)') OK
 
