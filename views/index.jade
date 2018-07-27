@@ -36,24 +36,23 @@ block content
             div
                 table#bkd-setting
                     tr
-                        td  Cycle (giây): {{ bkd.CycleTime }}
+                        td
+                            p Cycle (giây): {{ bkd.CycleTime }}
                             input(type='number', :id="'CycleTime' + bkd.BoardID")
-                        td
-                            button.mr-2(v-on:click='submitCycleTime(bkd.BoardID)') OK
+                            button(v-on:click='submitCycleTime(bkd.BoardID)') OK
 
-                        td  Sản lượng TT: {{ bkd.SLThucte }}
-                            input(type='number', :id="'SLThucte' + bkd.BoardID")
                         td
+                            p Sản lượng TT: {{ bkd.SLThucte }}
+                            input(type='number', :id="'SLThucte' + bkd.BoardID")
                             button(v-on:click='submitSLThucte(bkd.BoardID)') OK
                     tr
-                        td  Mục tiêu ngày: {{ bkd.MTNgay }}
+                        td
+                            p Mục tiêu ngày: {{ bkd.MTNgay }}
                             input(type='number', :id="'MTNgay' + bkd.BoardID")
+                            button(v-on:click='submitMTNgay(bkd.BoardID)') OK
                         td
-                            button.mr-2(v-on:click='submitMTNgay(bkd.BoardID)') OK
-
-                        td  Mục tiêu HT: {{ bkd.MThientai }}
+                            p Mục tiêu HT: {{ bkd.MThientai }}
                             input(type='number', :id="'MThientai' + bkd.BoardID")
-                        td
                             button(v-on:click='submitMThientai(bkd.BoardID)') OK
 
     script.

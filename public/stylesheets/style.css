@@ -45,11 +45,15 @@ body {
 input[type="number"] {
   width: 100px; }
 
-#bkd-setting td {
-  text-align: right; }
-
-#bkd-setting input[type="number"] {
-  width: 70px; }
+#bkd-setting {
+  width: 100%; }
+  #bkd-setting input[type="number"] {
+    width: 50%; }
+  #bkd-setting p {
+    margin: 0;
+    padding: 0; }
+  #bkd-setting td {
+    padding-bottom: 10px; }
 
 .board-delete {
   display: block;
