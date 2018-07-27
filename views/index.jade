@@ -100,6 +100,7 @@ block content
 
                         if (ok) {
                             socket.emit('update bkd', {BoardID: boardID, SLThucte: value})
+                            socket.emit('update SLThucte', {BoardID: boardID, SLThucte: value})
                         }
                     }
                     elem.val('')
@@ -113,6 +114,7 @@ block content
 
                         if (ok) {
                             socket.emit('update bkd', {BoardID: boardID, MThientai: value})
+                            socket.emit('update MThientai', {BoardID: boardID, MThientai: value})
                         }
                     }
                     elem.val('')

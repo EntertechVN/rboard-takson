@@ -1,4 +1,7 @@
-let mongo = require('./mongo');
+let singleton = require('./singleton');
+let slt = singleton();
+
+mongo = require('./mongo');
 let moment = require('moment');
 module.exports = function (io) {
     io.on('connection', function (socket) {
@@ -120,6 +123,14 @@ module.exports = function (io) {
             });
             socket.emit('bcon-history updated')
         });
+
+        socket.on('update SLThucte', function (bkd) {
+            slt.SLThucte = {value: bkd.SLThucte, times: 2}
+        });
+
+        socket.on('update MThientai', function (bkd) {
+            slt.MThientai = {value: bkd.MThientai, times: 2}
+        });
     });
 };
 
@@ -140,7 +151,7 @@ class BconLamp {
         this.lamps = lamps.sort(lampSort);
     }
 
-    static createMulti(bcons){
+    static createMulti(bcons) {
         let bconLamps = [];
         bcons.forEach(function (bcon) {
             bconLamps.push(new BconLamp(bcon))
@@ -163,7 +174,7 @@ class Lamp {
     }
 }
 
-function lampSort(a, b){
-    if(parseInt(a.TT) < parseInt(b.TT)) return -1;
+function lampSort(a, b) {
+    if (parseInt(a.TT) < parseInt(b.TT)) return -1;
     return 1;
 }

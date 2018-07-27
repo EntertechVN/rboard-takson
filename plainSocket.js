@@ -1,3 +1,6 @@
+let singleton = require('./singleton');
+let slt = singleton();
+
 let net = require('net');
 let queryString = require('query-string');
 let mongo = require('./mongo');
@@ -9,7 +12,7 @@ let sockets = Object.create(null);
 module.exports = function (io, port) {
     // create plain TCP socket
     net.createServer(function (TCPSocket) {
-        TCPSocket.setTimeout(10000);
+        TCPSocket.setTimeout(30000);
 
         TCPClients++;
         TCPSocket.nickname = "Con# " + TCPClients;
@@ -47,13 +50,30 @@ module.exports = function (io, port) {
 
                         db.collection("bkds").find({BoardID: bkd.BoardID}).toArray(function (err, bkds) {
                             responseData.bkd = bkds[0];
-
-                            TCPSocket.write(response({
+                            responseObj = {
                                 Status: 'OK',
                                 MTNgay: responseData.bkd.MTNgay || 0,
                                 CycleTime: responseData.bkd.CycleTime || 0,
                                 ...filterSetting(responseData.setting)
-                            }));
+                            };
+
+                            if (slt.MThientai) {
+                                responseObj.MThientai = slt.MThientai.value;
+                                slt.MThientai.times--;
+                                if (slt.MThientai.times === 0){
+                                    delete slt.MThientai;
+                                }
+                            }
+
+                            if (slt.SLThucte) {
+                                responseObj.SLThucte = slt.SLThucte.value;
+                                slt.SLThucte.times--;
+                                if (slt.SLThucte.times === 0){
+                                    delete slt.SLThucte;
+                                }
+                            }
+
+                            TCPSocket.write(response(responseObj));
                         });
 
                         io.sockets.emit('bkds updated')
