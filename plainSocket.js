@@ -66,11 +66,19 @@ module.exports = function (io, port) {
                             }
 
                             if (slt.SLThucte) {
+                                if(!responseObj.MThientai){
+                                    responseObj.MThientai = responseData.bkd.MThientai;
+                                }
+
                                 responseObj.SLThucte = slt.SLThucte.value;
                                 slt.SLThucte.times--;
                                 if (slt.SLThucte.times === 0){
                                     delete slt.SLThucte;
                                 }
+                            }
+
+                            if (responseObj.MThientai && !responseObj.SLThucte){
+                                responseObj.SLThucte = responseData.bkd.SLThucte;
                             }
 
                             TCPSocket.write(response(responseObj));
