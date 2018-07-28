@@ -37,21 +37,21 @@ block content
                 table#bkd-setting
                     tr
                         td
-                            p Cycle (giây): {{ bkd.CycleTime }}
+                            p Cycle(s): {{ bkd.CycleTime }}
                             input(type='number', :id="'CycleTime' + bkd.BoardID")
                             button(v-on:click='submitCycleTime(bkd.BoardID)') OK
 
                         td
-                            p Sản lượng thực tế: {{ bkd.SLThucte }}
+                            p SLThucte: {{ bkd.SLThucte }}
                             input(type='number', :id="'SLThucte' + bkd.BoardID")
                             button(v-on:click='submitSLThucte(bkd.BoardID)') OK
                     tr
                         td
-                            p Mục tiêu ngày: {{ bkd.MTNgay }}
+                            p MTNgay: {{ bkd.MTNgay }}
                             input(type='number', :id="'MTNgay' + bkd.BoardID")
                             button(v-on:click='submitMTNgay(bkd.BoardID)') OK
                         td
-                            p Mục tiêu hiện tại: {{ bkd.MThientai }}
+                            p MTHientai: {{ bkd.MThientai }}
                             input(type='number', :id="'MThientai' + bkd.BoardID")
                             button(v-on:click='submitMThientai(bkd.BoardID)') OK
 
