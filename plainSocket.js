@@ -82,10 +82,32 @@ module.exports = function (io, port) {
                             }
 
                             TCPSocket.write(response(responseObj));
-                        });
 
-                        io.sockets.emit('bkds updated')
+                            io.sockets.emit('bkds updated')
+                        });
                     });
+
+                    // save to history
+                    mongo(function (db) {
+                        (async () => {
+                            aBkd = await db.collection("bkds").find({BoardID: bkd.BoardID}).toArray();
+                            if (aBkd.length > 0) {
+                                let bkdCopy = aBkd[0];
+                                bkdCopy.date = moment().format('D/M/Y');
+                                // prevent duplicate ID
+                                delete bkdCopy._id;
+
+                                mongo(function (db) {
+                                    db.collection("bkds-history").update(
+                                        {BoardID: bkdCopy.BoardID, date: bkdCopy.date},
+                                        {$set: bkdCopy},
+                                        {upsert: true}
+                                    );
+                                })
+                            }
+                        })()
+                    });
+
                 } else if (isBCON(message)) {
                     let bcon = parseQuery(stringMessage);
 

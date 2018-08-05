@@ -34,8 +34,9 @@ module.exports = function (io) {
                 db.collection("bkds").removeOne(
                     {BoardID: BoardID}
                 );
+
+                socket.emit('bkds updated')
             });
-            socket.emit('bkds updated')
         });
 
         socket.on('update TimeCa', function (timeArr) {

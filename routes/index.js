@@ -6,6 +6,10 @@ router.get('/', function(req, res, next) {
   res.render('index');
 });
 
+router.get('/history', function(req, res, next) {
+    res.render('bkds-history');
+});
+
 router.get('/healthz', function(req, res, next) {
     res.send('OK')
 });

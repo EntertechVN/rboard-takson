@@ -1,0 +1,78 @@
+extends layout
+
+block content
+    div#app.row
+        div(v-for="bkd in bkds").col-5
+            div.board-container
+                div.text-right
+                    span(v-on:click='deleteBKD(bkd.BoardID)').board-delete
+                table.board
+                    tr
+                        td ID
+                        td
+                            span.value {{ bkd.BoardID }}
+                    tr
+                        td MỤC TIÊU NGÀY
+                        td
+                            span.value {{ bkd.MTNgay }}
+                    tr
+                        td MỤC TIÊU HIỆN TẠI
+                        td
+                            span.value {{ bkd.MThientai }}
+                    tr
+                        td SẢN LƯỢNG THỰC TẾ
+                        td
+                            span.value {{ bkd.SLThucte }}
+                    tr
+                        td TỈ LỆ (%)
+                        td
+                            span.value {{ displayChenhLech(bkd.MThientai, bkd.SLThucte) }}
+                            span  %
+                    tr
+                        td HIỆU SUẤT (%)
+                        td
+                            span.value {{ displayHieuSuat(bkd.SLThucte, bkd.MTNgay) }}
+                            span  %
+
+    script.
+        var socket = io()
+        var app = new Vue({
+            el: '#app',
+            data: {
+                bkds: []
+            },
+
+            methods: {
+                deleteBKD: function (BoardID) {
+                    if (confirm('Đồng ý xóa bảng này?')) {
+                        socket.emit('delete bkd-history', BoardID)
+                    }
+                },
+
+                displayChenhLech: function (hienTai, thucTe) {
+                    return Math.round((parseInt(thucTe) * 100) / parseInt(hienTai))
+                },
+
+                displayHieuSuat: function (thucTe, mtNgay) {
+                    return Math.round((parseInt(thucTe) * 100) / parseInt(mtNgay))
+                }
+            }
+        })
+
+        socket.on('connect', function () {
+            console.log('connected')
+            socket.emit('get bkds-history')
+        })
+
+        socket.on('disconnect', function () {
+            console.log('disconnected')
+        })
+
+        socket.on('set bkds-history', function (data) {
+            console.log(data)
+            app.bkds = data.bkds
+        })
+
+        socket.on('bkds-history updated', function () {
+            socket.emit('get bkds-history')
+        })
