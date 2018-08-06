@@ -18,6 +18,24 @@ module.exports = function (io) {
             })
         });
 
+        socket.on('get bkds-history', function (dateStr) {
+            console.log('get bkds-history event received');
+            mongo(function (db) {
+                db.collection("bkds-history").find({date: dateStr}).toArray(function (err, bkds) {
+                    socket.emit('set bkds-history', bkds);
+                });
+            })
+        });
+
+        socket.on('delete bkds-history', function (bkd) {
+            mongo(function (db) {
+                db.collection("bkds-history").removeOne(
+                    {date: bkd.date, BoardID: bkd.BoardID}
+                );
+            });
+            socket.emit('bkds-history updated')
+        });
+
         socket.on('update bkd', function (bkd) {
             mongo(function (db) {
                 db.collection("bkds").update(

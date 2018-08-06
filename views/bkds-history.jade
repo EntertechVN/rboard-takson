@@ -2,6 +2,13 @@ extends layout
 
 block content
     div#app.row
+        div.col-12#date-setting
+            div.form-group
+                label(for="#date-picker") Chọn ngày hiển thị:
+                input(type="text")#date-picker
+                button(v-on:click='changeDate()')#date-submit Submit
+            h3  Dữ liệu ngày {{ dateStr }}
+
         div(v-for="bkd in bkds").col-5
             div.board-container
                 div.text-right
@@ -39,13 +46,21 @@ block content
         var app = new Vue({
             el: '#app',
             data: {
+                dateStr: moment().format('D/M/Y'),
                 bkds: []
             },
 
             methods: {
+                changeDate: function () {
+                    let dateValue = $('#date-picker').val();
+                    app.dateStr = moment(dateValue, 'D/M/Y').format('D/M/Y');
+
+                    socket.emit('get bkds-history', app.dateStr);
+                },
+
                 deleteBKD: function (BoardID) {
                     if (confirm('Đồng ý xóa bảng này?')) {
-                        socket.emit('delete bkd-history', BoardID)
+                        socket.emit('delete bkds-history', {date: app.dateStr, BoardID: BoardID})
                     }
                 },
 
@@ -61,18 +76,22 @@ block content
 
         socket.on('connect', function () {
             console.log('connected')
-            socket.emit('get bkds-history')
+            socket.emit('get bkds-history', app.dateStr)
         })
 
         socket.on('disconnect', function () {
             console.log('disconnected')
         })
 
-        socket.on('set bkds-history', function (data) {
-            console.log(data)
-            app.bkds = data.bkds
+        socket.on('set bkds-history', function (bkds) {
+            app.bkds = bkds
         })
 
         socket.on('bkds-history updated', function () {
-            socket.emit('get bkds-history')
+            socket.emit('get bkds-history', app.dateStr)
         })
+
+        $('#date-picker').datepicker({
+            format: "dd/mm/yyyy",
+            language: "vi"
+        });
