@@ -31,6 +31,12 @@ module.exports = function (io, port) {
         });
 
         TCPSocket.on('data', function (message) {
+            // refuse to receive data when midnight
+            if (isMidnight()) {
+                TCPSocket.write("Midnight");
+                return;
+            }
+
             stringMessage = message.toString();
             console.log('TCP message received', clientName, stringMessage);
             if (isValidateMessage(message)) {
@@ -260,4 +266,9 @@ function parseQuery(message) {
     });
 
     return parsed;
+}
+
+function isMidnight() {
+    var Hour = parseInt(moment().format("HH"));
+    return (Hour > 23 || Hour < 1)
 }
