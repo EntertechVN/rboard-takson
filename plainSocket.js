@@ -33,7 +33,6 @@ module.exports = function (io, port) {
         TCPSocket.on('data', function (message) {
             // refuse to receive data when midnight
             if (isMidnight()) {
-                TCPSocket.write("Midnight");
                 return;
             }
 
