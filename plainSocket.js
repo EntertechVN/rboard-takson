@@ -269,5 +269,6 @@ function parseQuery(message) {
 
 function isMidnight() {
     var Hour = parseInt(moment().format("HH"));
-    return (Hour > 23 || Hour < 1)
+    console.log("Current time " + Hour);
+    return (Hour > 18 || Hour < 5)
 }
