@@ -9,6 +9,7 @@ let moment = require('moment');
 let TCPClients = 0;
 let sockets = Object.create(null);
 
+slt.lastBKD = slt.lastBCON = moment().unix();
 module.exports = function (io, port) {
     // create plain TCP socket
     net.createServer(function (TCPSocket) {
@@ -86,7 +87,10 @@ module.exports = function (io, port) {
                                 responseObj.SLThucte = responseData.bkd.SLThucte;
                             }
 
-                            TCPSocket.write(response(responseObj));
+                            if (slt.lastBKD < moment().unix()){
+                                TCPSocket.write(response(responseObj));
+                                slt.lastBKD = moment().unix();
+                            }
 
                             io.sockets.emit('bkds updated')
                         });
@@ -131,11 +135,14 @@ module.exports = function (io, port) {
                         db.collection("bcons").find({BoardID: bcon.BoardID}).toArray(function (err, bcons) {
                             responseData.bcon = bcons[0];
 
-                            TCPSocket.write(response({
-                                Status: 'OK',
-                                ...filterBcon(responseData.bcon),
-                                ...filterSetting(responseData.setting),
-                            }));
+                            if (slt.lastBCON < moment().unix()) {
+                                TCPSocket.write(response({
+                                    Status: 'OK',
+                                    ...filterBcon(responseData.bcon),
+                                    ...filterSetting(responseData.setting),
+                                }));
+                                slt.lastBCON = moment().unix();
+                            }
                         });
 
                         io.sockets.emit('bcons updated')
