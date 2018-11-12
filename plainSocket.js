@@ -10,6 +10,25 @@ let TCPClients = 0;
 let sockets = Object.create(null);
 
 slt.lastBKD = slt.lastBCON = moment().unix();
+slt.bkdOff = slt.bconOff = false;
+
+// get offTime setting
+setInterval(function () {
+    mongo(function (db) {
+        (async () => {
+            settings = await db.collection("setting").find().toArray();
+            settings.forEach(function (st) {
+                if (st.id === 0){
+                    slt.bconOff = isOffTime(st.OffTime);
+                }
+                else if (st.id === 1){
+                    slt.bkdOff = isOffTime(st.OffTime);
+                }
+            });
+        })()
+    });
+}, 5000);
+
 module.exports = function (io, port) {
     // create plain TCP socket
     net.createServer(function (TCPSocket) {
@@ -32,10 +51,6 @@ module.exports = function (io, port) {
         });
 
         TCPSocket.on('data', function (message) {
-            // refuse to receive data when midnight
-            if (isMidnight()) {
-                return;
-            }
 
             stringMessage = message.toString();
             console.log('TCP message received', clientName, stringMessage);
@@ -87,7 +102,7 @@ module.exports = function (io, port) {
                                 responseObj.SLThucte = responseData.bkd.SLThucte;
                             }
 
-                            if (slt.lastBKD < moment().unix()){
+                            if (slt.lastBKD < moment().unix() && !slt.bkdOff){
                                 TCPSocket.write(response(responseObj));
                                 slt.lastBKD = moment().unix();
                             }
@@ -135,7 +150,7 @@ module.exports = function (io, port) {
                         db.collection("bcons").find({BoardID: bcon.BoardID}).toArray(function (err, bcons) {
                             responseData.bcon = bcons[0];
 
-                            if (slt.lastBCON < moment().unix()) {
+                            if (slt.lastBCON < moment().unix() && !slt.bconOff) {
                                 TCPSocket.write(response({
                                     Status: 'OK',
                                     ...filterBcon(responseData.bcon),
@@ -274,8 +289,15 @@ function parseQuery(message) {
     return parsed;
 }
 
-function isMidnight() {
-    var Hour = parseInt(moment().format("HH"));
-    console.log("Current time " + Hour);
-    return (Hour >= 22 || Hour < 5)
+function isOffTime(offTime) {
+    var momentOffTime = moment(offTime, 'HH:mm');
+    var now = moment();
+    var result = now >= momentOffTime || parseInt(now.format('HH')) < 5; // off from offTime & start from 5am
+
+    console.log(offTime);
+    console.log(momentOffTime);
+    console.log(now);
+    console.log(result);
+
+    return result;
 }
