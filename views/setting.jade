@@ -20,7 +20,10 @@ block content
                         td
                             input(type='time', id='TimeCaRaBKD' + i, :value="settingBKD.TimeCaRa" + i)
                 tr
-                    td(colspan=3)
+                    td Giờ tắt:
+                    td
+                        input(type='time', id='OffTimeBKD' , :value="settingBKD.OffTime")
+                    td
                         button(v-on:click='submitTimeBKD')#submitTimeBKD.float-right Submit
 
         div#time-setup.col-4
@@ -41,7 +44,10 @@ block content
                         td
                             input(type='time', id='TimeCaRa' + i, :value="setting.TimeCaRa" + i)
                 tr
-                    td(colspan=3)
+                    td Giờ tắt:
+                    td
+                        input(type='time', id='OffTimeBCON' , :value="setting.OffTime")
+                    td
                         button(v-on:click='submitTime')#submitTime.float-right Submit
     script.
         var socket = io()
@@ -60,6 +66,7 @@ block content
                         timeArr[cavaoKey] = $('#TimeCaVao'+i).val()
                         timeArr[caraKey] = $('#TimeCaRa'+i).val()
                     }
+                    timeArr['OffTime'] = $('#OffTimeBCON').val();
 
                     console.log(timeArr)
                     if (confirm('Xác nhận điều chỉnh thời gian các ca Bảng con?')){
@@ -74,6 +81,7 @@ block content
                         timeArr[cavaoKey] = $('#TimeCaVaoBKD' + i).val()
                         timeArr[caraKey] = $('#TimeCaRaBKD' + i).val()
                     }
+                    timeArr['OffTime'] = $('#OffTimeBKD').val();
 
                     console.log(timeArr)
                     if (confirm('Xác nhận điều chỉnh thời gian các ca Bảng khắc dấu?')) {
