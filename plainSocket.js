@@ -55,7 +55,7 @@ module.exports = function (io, port) {
             stringMessage = message.toString();
             console.log('TCP message received', clientName, stringMessage);
             if (isValidateMessage(message)) {
-                if (isBKD(message)) {
+                if (isBKD(message) && !slt.bkdOff) {
                     let bkd = parseQuery(stringMessage);
                     mongo(function (db) {
                         db.collection("bkds").update(
@@ -102,7 +102,7 @@ module.exports = function (io, port) {
                                 responseObj.SLThucte = responseData.bkd.SLThucte;
                             }
 
-                            if (slt.lastBKD < moment().unix() && !slt.bkdOff){
+                            if (slt.lastBKD < moment().unix()){
                                 TCPSocket.write(response(responseObj));
                                 slt.lastBKD = moment().unix();
                             }
@@ -132,7 +132,7 @@ module.exports = function (io, port) {
                         })()
                     });
 
-                } else if (isBCON(message)) {
+                } else if (isBCON(message) && !slt.bconOff) {
                     let bcon = parseQuery(stringMessage);
 
                     mongo(function (db) {
@@ -150,7 +150,7 @@ module.exports = function (io, port) {
                         db.collection("bcons").find({BoardID: bcon.BoardID}).toArray(function (err, bcons) {
                             responseData.bcon = bcons[0];
 
-                            if (slt.lastBCON < moment().unix() && !slt.bconOff) {
+                            if (slt.lastBCON < moment().unix()) {
                                 TCPSocket.write(response({
                                     Status: 'OK',
                                     ...filterBcon(responseData.bcon),
