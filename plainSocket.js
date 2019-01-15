@@ -248,13 +248,21 @@ function filterSetting(objs) {
 function filterBcon(objs) {
     if (objs == null) return;
     let rObjs = {};
+    let count = 0;
+
     Object.keys(objs).forEach(function (key) {
+        // Get only Cyt data
         if (key.toString().indexOf('Cyt') !== -1) {
             rObjs[key] = objs[key];
         }
+
+        // Count number of Light
+        if (key.toString().indexOf('Light') !== -1) {
+            count++;
+        }
     });
 
-    return sortCyt(rObjs);
+    return sortCyt(rObjs, count);
 }
 
 function sortCa(setting) {
@@ -267,9 +275,9 @@ function sortCa(setting) {
     return ordered;
 }
 
-function sortCyt(bcon) {
+function sortCyt(bcon, count) {
     let ordered = {};
-    for (i = 1; i <= 12; i++) {
+    for (i = 1; i <= count; i++) {
         ordered['CytSet' + i] = bcon['CytSet' + i] || 0;
         ordered['CytRed' + i] = bcon['CytRed' + i] || 0;
         ordered['CytYell' + i] = bcon['CytYell' + i] || 0;
