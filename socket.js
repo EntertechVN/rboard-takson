@@ -144,11 +144,11 @@ module.exports = function (io) {
         });
 
         socket.on('update SLThucte', function (bkd) {
-            slt.SLThucte = {value: bkd.SLThucte, times: 2}
+            slt['SLThucte' + bkd.BoardID] = {value: bkd.SLThucte, times: 2};
         });
 
         socket.on('update MThientai', function (bkd) {
-            slt.MThientai = {value: bkd.MThientai, times: 2}
+            slt['MThientai' + bkd.BoardID] = {value: bkd.MThientai, times: 2}
         });
     });
 };

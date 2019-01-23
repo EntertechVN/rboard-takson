@@ -78,23 +78,25 @@ module.exports = function (io, port) {
                                 ...filterSetting(responseData.setting)
                             };
 
-                            if (slt.MThientai) {
-                                responseObj.MThientai = slt.MThientai.value;
-                                slt.MThientai.times--;
-                                if (slt.MThientai.times === 0){
-                                    delete slt.MThientai;
+                            MThientaiID = 'MThientai' + bkd.BoardID;
+                            SLThucteID = 'SLThucte' + bkd.BoardID;
+                            if (slt[MThientaiID]) {
+                                responseObj.MThientai = slt[MThientaiID].value;
+                                slt[MThientaiID].times--;
+                                if (slt[MThientaiID].times === 0){
+                                    delete slt[MThientaiID];
                                 }
                             }
 
-                            if (slt.SLThucte) {
+                            if (slt[SLThucteID]) {
                                 if(!responseObj.MThientai){
                                     responseObj.MThientai = responseData.bkd.MThientai;
                                 }
 
-                                responseObj.SLThucte = slt.SLThucte.value;
-                                slt.SLThucte.times--;
-                                if (slt.SLThucte.times === 0){
-                                    delete slt.SLThucte;
+                                responseObj.SLThucte = slt[SLThucteID].value;
+                                slt[SLThucteID].times--;
+                                if (slt[SLThucteID].times === 0){
+                                    delete slt[SLThucteID];
                                 }
                             }
 
