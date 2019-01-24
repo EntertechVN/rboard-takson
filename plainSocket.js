@@ -80,7 +80,7 @@ module.exports = function (io, port) {
                             var lastBKDID = 'lastBKD' + bkd.BoardID;
                             if (!slt[lastBKDID] || slt[lastBKDID] < moment().unix()){
                                 // set MThientai & SLThucte if exists
-                                responseObj = SetResponseSingleton(responseObj, bkd);
+                                responseObj = SetResponseSingleton(responseObj, responseData, bkd);
 
                                 TCPSocket.write(response(responseObj));
                                 slt[lastBKDID] = moment().unix();
@@ -290,7 +290,7 @@ function isOffTime(offTime) {
     return result;
 }
 
-function SetResponseSingleton(responseObj, bkd) {
+function SetResponseSingleton(responseObj, responseData, bkd) {
     var MThientaiID = 'MThientai' + bkd.BoardID;
     var SLThucteID = 'SLThucte' + bkd.BoardID;
     if (slt[MThientaiID]) {
