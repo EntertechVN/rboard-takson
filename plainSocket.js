@@ -9,7 +9,6 @@ let moment = require('moment');
 let TCPClients = 0;
 let sockets = Object.create(null);
 
-slt.lastBKD = slt.lastBCON = moment().unix();
 slt.bkdOff = slt.bconOff = false;
 
 // get offTime setting
@@ -78,12 +77,13 @@ module.exports = function (io, port) {
                                 ...filterSetting(responseData.setting)
                             };
 
-                            if (slt.lastBKD < moment().unix()){
+                            var lastBKDID = 'lastBKD' + bkd.BoardID;
+                            if (!slt[lastBKDID] || slt[lastBKDID] < moment().unix()){
                                 // set MThientai & SLThucte if exists
                                 responseObj = SetResponseSingleton(responseObj, bkd);
 
                                 TCPSocket.write(response(responseObj));
-                                slt.lastBKD = moment().unix();
+                                slt[lastBKDID] = moment().unix();
                             }
 
                             io.sockets.emit('bkds updated')
@@ -129,13 +129,14 @@ module.exports = function (io, port) {
                         db.collection("bcons").find({BoardID: bcon.BoardID}).toArray(function (err, bcons) {
                             responseData.bcon = bcons[0];
 
-                            if (slt.lastBCON < moment().unix()) {
+                            var lastBCONID = 'lastBCON' + bcon.BoardID;
+                            if (!slt[lastBCONID] || slt[lastBCONID] < moment().unix()) {
                                 TCPSocket.write(response({
                                     Status: 'OK',
                                     ...filterBcon(responseData.bcon),
                                     ...filterSetting(responseData.setting),
                                 }));
-                                slt.lastBCON = moment().unix();
+                                slt[lastBCONID] = moment().unix();
                             }
                         });
 
@@ -290,8 +291,8 @@ function isOffTime(offTime) {
 }
 
 function SetResponseSingleton(responseObj, bkd) {
-    MThientaiID = 'MThientai' + bkd.BoardID;
-    SLThucteID = 'SLThucte' + bkd.BoardID;
+    var MThientaiID = 'MThientai' + bkd.BoardID;
+    var SLThucteID = 'SLThucte' + bkd.BoardID;
     if (slt[MThientaiID]) {
         responseObj.MThientai = slt[MThientaiID].value;
         slt[MThientaiID].times--;
