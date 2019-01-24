@@ -78,33 +78,10 @@ module.exports = function (io, port) {
                                 ...filterSetting(responseData.setting)
                             };
 
-                            MThientaiID = 'MThientai' + bkd.BoardID;
-                            SLThucteID = 'SLThucte' + bkd.BoardID;
-                            if (slt[MThientaiID]) {
-                                responseObj.MThientai = slt[MThientaiID].value;
-                                slt[MThientaiID].times--;
-                                if (slt[MThientaiID].times === 0){
-                                    delete slt[MThientaiID];
-                                }
-                            }
-
-                            if (slt[SLThucteID]) {
-                                if(!responseObj.MThientai){
-                                    responseObj.MThientai = responseData.bkd.MThientai;
-                                }
-
-                                responseObj.SLThucte = slt[SLThucteID].value;
-                                slt[SLThucteID].times--;
-                                if (slt[SLThucteID].times === 0){
-                                    delete slt[SLThucteID];
-                                }
-                            }
-
-                            if (responseObj.MThientai && !responseObj.SLThucte){
-                                responseObj.SLThucte = responseData.bkd.SLThucte;
-                            }
-
                             if (slt.lastBKD < moment().unix()){
+                                // set MThientai & SLThucte if exists
+                                responseObj = SetResponseSingleton(responseObj);
+
                                 TCPSocket.write(response(responseObj));
                                 slt.lastBKD = moment().unix();
                             }
@@ -310,4 +287,33 @@ function isOffTime(offTime) {
     console.log(result);
 
     return result;
+}
+
+function SetResponseSingleton(responseObj) {
+    MThientaiID = 'MThientai' + bkd.BoardID;
+    SLThucteID = 'SLThucte' + bkd.BoardID;
+    if (slt[MThientaiID]) {
+        responseObj.MThientai = slt[MThientaiID].value;
+        slt[MThientaiID].times--;
+        if (slt[MThientaiID].times === 0){
+            delete slt[MThientaiID];
+        }
+    }
+
+    if (slt[SLThucteID]) {
+        if(!responseObj.MThientai){
+            responseObj.MThientai = responseData.bkd.MThientai;
+        }
+
+        responseObj.SLThucte = slt[SLThucteID].value;
+        slt[SLThucteID].times--;
+        if (slt[SLThucteID].times === 0){
+            delete slt[SLThucteID];
+        }
+    }
+
+    if (responseObj.MThientai && !responseObj.SLThucte){
+        responseObj.SLThucte = responseData.bkd.SLThucte;
+    }
+    return responseObj;
 }
