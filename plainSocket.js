@@ -65,7 +65,7 @@ module.exports = function (io, port) {
 
             stringMessage = message.toString();
             console.log('TCP message received', clientName, stringMessage);
-            logger.info('CLIENT ' + clientName + ': ' + stringMessage);
+            logger.info(`${moment().format('DD-MM-YYYY HH:mm:ss')} CLIENT ${clientName}: ${stringMessage}`);
             if (isValidateMessage(message)) {
                 if (isBKD(message) && !slt.bkdOff) {
                     let bkd = parseQuery(stringMessage);
@@ -216,7 +216,7 @@ function response(object) {
     });
 
     responseString = responseString.slice(0, -1);
-    logger.info('SERVER: ' + responseString);
+    logger.info(`${moment().format('DD-MM-YYYY HH:mm:ss')} SERVER: ${responseString}`);
     return responseString;
 }
 
