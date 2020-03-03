@@ -28,6 +28,18 @@ setInterval(function () {
     });
 }, 5000);
 
+// Log setting
+const winston = require('winston');
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.simple(),
+    defaultMeta: '',
+    transports: [
+        new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'system.log' })
+    ]
+});
+
 module.exports = function (io, port) {
     // create plain TCP socket
     net.createServer(function (TCPSocket) {
@@ -53,6 +65,7 @@ module.exports = function (io, port) {
 
             stringMessage = message.toString();
             console.log('TCP message received', clientName, stringMessage);
+            logger.info('CLIENT ' + clientName + ': ' + stringMessage);
             if (isValidateMessage(message)) {
                 if (isBKD(message) && !slt.bkdOff) {
                     let bkd = parseQuery(stringMessage);
@@ -197,13 +210,14 @@ function isBCON(message) {
 }
 
 function response(object) {
-    //console.log(object);
     let responseString = '';
     Object.keys(object).forEach(function (key) {
         responseString += key + '=' + object[key] + '&';
     });
 
-    return responseString.slice(0, -1);
+    responseString = responseString.slice(0, -1);
+    logger.info('SERVER: ' + responseString);
+    return responseString;
 }
 
 function filterSetting(objs) {
