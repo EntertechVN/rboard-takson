@@ -83,56 +83,20 @@ module.exports = function (io, port) {
                             {BoardID: bkd.BoardID},
                             {$set: bkd},
                             {upsert: true}
-                        );
+                        ).then(function (){
+                            io.sockets.emit('bkds updated');
 
-                        let responseData = {};
-                        db.collection("setting").find({id: 1}).toArray(function (err, setting) {
-                            responseData.setting = setting[0]
-                        });
-
-                        db.collection("bkds").find({BoardID: bkd.BoardID}).toArray(function (err, bkds) {
-                            responseData.bkd = bkds[0];
-                            responseObj = {
-                                Status: 'OK',
-                                MTNgay: responseData.bkd.MTNgay || 0,
-                                CycleTime: responseData.bkd.CycleTime || 0,
-                                ...filterSetting(responseData.setting)
-                            };
-
-                            var lastBKDID = 'lastBKD' + bkd.BoardID;
-                            if (!slt[lastBKDID] || slt[lastBKDID] < moment().unix()){
-                                // set MThientai & SLThucte if exists
-                                responseObj = SetResponseSingleton(responseObj, responseData, bkd);
-
-                                TCPSocket.write(response(responseObj));
-                                slt[lastBKDID] = moment().unix();
-                            }
-
-                            io.sockets.emit('bkds updated')
+                            // save to history
+                            bkd.date = moment().format('D/M/Y');
+                            mongo(function (db) {
+                                db.collection("bkds-history").update(
+                                    {BoardID: bkd.BoardID, date: bkd.date},
+                                    {$set: bkd},
+                                    {upsert: true}
+                                );
+                            })
                         });
                     });
-
-                    // save to history
-                    mongo(function (db) {
-                        (async () => {
-                            aBkd = await db.collection("bkds").find({BoardID: bkd.BoardID}).toArray();
-                            if (aBkd.length > 0) {
-                                let bkdCopy = aBkd[0];
-                                bkdCopy.date = moment().format('D/M/Y');
-                                // prevent duplicate ID
-                                delete bkdCopy._id;
-
-                                mongo(function (db) {
-                                    db.collection("bkds-history").update(
-                                        {BoardID: bkdCopy.BoardID, date: bkdCopy.date},
-                                        {$set: bkdCopy},
-                                        {upsert: true}
-                                    );
-                                })
-                            }
-                        })()
-                    });
-
                 } else if (isBCON(message) && !slt.bconOff) {
                     let bcon = parseQuery(stringMessage);
 
@@ -211,7 +175,8 @@ function isValidateMessage(message) {
 }
 
 function isBKD(message) {
-    return message && message.toString().indexOf(B_KD) !== -1;
+    return true;
+    //return message && message.toString().indexOf(B_KD) !== -1;
 }
 
 function isBCON(message) {

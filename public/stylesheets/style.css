@@ -25,22 +25,27 @@ body {
   text-transform: uppercase; }
 
 .board-container {
-  padding: 15px;
-  background: #1f1b17;
-  border-radius: 10px; }
+  padding: 10px;
+  background: #3f3f41;
+  border-radius: 10px;
+  border: solid 10px #221f20; }
 
 .board {
   color: white;
-  font-weight: bold;
-  width: 100%; }
+  width: 100%;
+  table-layout: fixed;
+  text-align: center; }
+  .board span {
+    font-size: 2rem; }
+  .board span.value {
+    font-size: 3rem; }
 
 .board td {
-  border: 1px solid white;
-  padding: 10px;
+  border: 5px solid white;
   font-size: 20px; }
 
 .board .value {
-  color: #db251d; }
+  color: #ed1b23; }
 
 input[type="number"] {
   width: 100px; }
@@ -94,5 +99,27 @@ input[type="number"] {
 
 .lamp-color3 span {
   background: black; }
+
+.board-heading {
+  color: white;
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: bold; }
+
+.board-table-heading {
+  width: 100%;
+  color: white;
+  font-size: 1.5rem; }
+  .board-table-heading span.value {
+    color: #ed1b23; }
+
+.value-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 15px;
+  flex-wrap: wrap; }
+  .value-container span.value {
+    padding-right: 5px; }
 
 /*# sourceMappingURL=style.css.map */

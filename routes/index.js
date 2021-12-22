@@ -22,17 +22,16 @@ router.get('/history/export', function (req, res, next) {
             let sheet = workbook.addWorksheet(sheetTitle);
 
             sheet.columns = [
-                {header: 'ID', key: 'BoardID', width: 10},
-                {header: 'MỤC TIÊU NGÀY', key: 'MTNgay', width: 10},
-                {header: 'MỤC TIÊU HIỆN TẠI', key: 'MThientai', width: 10},
-                {header: 'SẢN LƯỢNG THỰC TẾ', key: 'SLThucte', width: 10},
-                {header: 'TỈ LỆ', key: 'TL', width: 10},
-                {header: 'HIỆU SUẤT', key: 'HS', width: 10},
+                {header: 'LINE', key: 'BoardID', width: 10},
+                {header: 'KẾ HOẠCH SẢN XUẤT/TARGET', key: 'MThientai', width: 10},
+                {header: 'SẢN LƯỢNG HIỆN TẠI/ACTUAL', key: 'SLThucte', width: 10},
+                {header: 'CHÊNH LỆCH/BALANCE', key: 'CL', width: 10},
+                {header: 'HIỆU SUẤT/PERFORMANCE', key: 'HS', width: 10},
             ];
 
             bkds.forEach(function (bkd) {
-                bkd.TL = Math.round((parseInt(bkd.SLThucte) * 100) / parseInt(bkd.MThientai)) + '%';
-                bkd.HS = Math.round((parseInt(bkd.SLThucte) * 100) / parseInt(bkd.MTNgay)) + '%';
+                bkd.CL = bkd.MThientai - bkd.SLThucte;
+                bkd.HS = Math.round((parseInt(bkd.SLThucte) * 100) / parseInt(bkd.MThientai));
                 sheet.addRow({...bkd});
             });
 

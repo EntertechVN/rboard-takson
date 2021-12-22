@@ -9,37 +9,42 @@ block content
                 button(v-on:click='changeDate()')#date-submit Submit
             h3  Dữ liệu ngày {{ dateStr }}
 
-        div(v-for="bkd in bkds").col-5
-            div.board-container.mb-1
+        div(v-for="bkd in bkds").col-lg-5.col-xs-12
+            div.board-container
                 div.text-right
                     span(v-on:click='deleteBKD(bkd.BoardID)').board-delete
+                h1.board-heading PRODUCTION CONTROLLER
+                table.board-table-heading
+                    tr
+                        td DATE
+                            span.value  {{ moment().format('D/M/Y') }}
+                        td.text-right LINE
+                            span.value  {{ bkd.BoardID }}
                 table.board
                     tr
-                        td ID
+                        td KẾ HOẠCH SẢN XUẤT <br> <strong>TARGET</strong>
                         td
-                            span.value {{ bkd.BoardID }}
+                            div.value-container
+                                span.value {{ bkd.MThientai }}
+                                span  Pcs
                     tr
-                        td MỤC TIÊU NGÀY
+                        td SẢN LƯỢNG HIỆN TẠI <br> <strong>ACTUAL</strong>
                         td
-                            span.value {{ bkd.MTNgay }}
+                            div.value-container
+                                span.value {{ bkd.SLThucte }}
+                                span  Pcs
                     tr
-                        td MỤC TIÊU HIỆN TẠI
+                        td CHÊNH LỆCH <br> <strong>BALANCE</strong>
                         td
-                            span.value {{ bkd.MThientai }}
+                            div.value-container
+                                span.value {{ displayChenhLech(bkd.MThientai, bkd.SLThucte) }}
+                                span  Pcs
                     tr
-                        td SẢN LƯỢNG THỰC TẾ
+                        td HIỆU SUẤT (%) <br> <strong>PERFORMANCE</strong>
                         td
-                            span.value {{ bkd.SLThucte }}
-                    tr
-                        td TỈ LỆ (%)
-                        td
-                            span.value {{ displayChenhLech(bkd.MThientai, bkd.SLThucte) }}
-                            span  %
-                    tr
-                        td HIỆU SUẤT (%)
-                        td
-                            span.value {{ displayHieuSuat(bkd.SLThucte, bkd.MTNgay) }}
-                            span  %
+                            div.value-container
+                                span.value {{ displayHieuSuat(bkd.MThientai, bkd.SLThucte) }}
+                                span &nbsp;&nbsp;&nbsp;%
             a(:href="'/history/export?BoardID=' + bkd.BoardID + '&date=' + dateStr").btn.btn-success.mb-1 Xuất dữ liệu
 
     script.
@@ -66,11 +71,11 @@ block content
                 },
 
                 displayChenhLech: function (hienTai, thucTe) {
-                    return Math.round((parseInt(thucTe) * 100) / parseInt(hienTai))
+                    return hienTai - thucTe
                 },
 
-                displayHieuSuat: function (thucTe, mtNgay) {
-                    return Math.round((parseInt(thucTe) * 100) / parseInt(mtNgay))
+                displayHieuSuat: function (hienTai, thucTe) {
+                    return Math.round((parseInt(thucTe) * 100) / parseInt(hienTai))
                 }
             }
         })
