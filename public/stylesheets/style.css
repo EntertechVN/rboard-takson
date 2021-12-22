@@ -28,7 +28,8 @@ body {
   padding: 10px;
   background: #3f3f41;
   border-radius: 10px;
-  border: solid 10px #221f20; }
+  border: solid 10px #221f20;
+  margin-bottom: 30px; }
 
 .board {
   color: white;
