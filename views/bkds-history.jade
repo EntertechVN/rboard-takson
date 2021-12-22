@@ -45,7 +45,7 @@ block content
                             div.value-container
                                 span.value {{ displayHieuSuat(bkd.MThientai, bkd.SLThucte) }}
                                 span &nbsp;&nbsp;&nbsp;%
-            a(:href="'/history/export?BoardID=' + bkd.BoardID + '&date=' + dateStr").btn.btn-success.mb-1 Xuất dữ liệu
+                a(:href="'/history/export?BoardID=' + bkd.BoardID + '&date=' + dateStr").btn.btn-success.mb-1 Xuất dữ liệu Excel
 
     script.
         var socket = io()

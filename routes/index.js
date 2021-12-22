@@ -17,7 +17,7 @@ router.get('/history/export', function (req, res, next) {
     let BoardID = req.query.BoardID;
     mongo(function (db) {
         db.collection("bkds-history").find({BoardID: BoardID, date: date}).toArray(function (err, bkds) {
-            let sheetTitle = `BKD_ID${BoardID}_${date.replace(/\//g, '_')}`;
+            let sheetTitle = `BTTSL_LINE${BoardID}_${date.replace(/\//g, '_')}`;
             let workbook = new Excel.Workbook();
             let sheet = workbook.addWorksheet(sheetTitle);
 
