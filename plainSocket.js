@@ -94,7 +94,12 @@ module.exports = function (io, port) {
                                     {$set: bkd},
                                     {upsert: true}
                                 );
-                            })
+                            });
+
+                            // response to socket
+                            TCPSocket.write(response({
+                                Status: 'OK',
+                            }));
                         });
                     });
                 } else if (isBCON(message) && !slt.bconOff) {
