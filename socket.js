@@ -12,7 +12,7 @@ module.exports = function (io) {
             mongo(function (db) {
                 data = {};
                 db.collection("bkds").find().toArray(function (err, bkds) {
-                    data.bkds = bkds;
+                    data.bkds = bkds.sort((a, b) => (a.BoardID > b.BoardID) ? 1 : -1);
                     socket.emit('set bkds', data);
                 });
             })
