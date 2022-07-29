@@ -1,5 +1,6 @@
 let singleton = require('./singleton');
 let slt = singleton();
+let Time = require('./components/Time');
 
 let net = require('net');
 let queryString = require('query-string');
@@ -78,6 +79,7 @@ module.exports = function (io, port) {
             if (isValidateMessage(message)) {
                 if (isBKD(message) && !slt.bkdOff) {
                     let bkd = parseQuery(stringMessage);
+                    bkd.updated_time = Time.getCurrentTimeStamp();
                     mongo(function (db) {
                         db.collection("bkds").update(
                             {BoardID: bkd.BoardID},
@@ -263,7 +265,10 @@ function parseQuery(message) {
     let parsed = queryString.parse(message);
     Object.keys(parsed).forEach(function (key) {
         if (Array.isArray(parsed[key])) {
-            parsed[key] = parsed[key][0].replace('Manufactor', '');
+            parsed[key] = parsed[key][0].replace('Manufactor=Entertech', '');
+        }
+        if (!isNaN(parseInt(parsed[key]))) {
+            parsed[key] = parseInt(parsed[key]);
         }
     });
 

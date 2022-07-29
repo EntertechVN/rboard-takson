@@ -2,7 +2,7 @@ extends layout
 
 block content
     div#app.row
-        div(v-for="bkd in bkds").col-lg-5.col-xs-12
+        div(v-for="bkd in bkds", v-if="Math.floor(Date.now() / 1000) - bkd.updated_time < 1800").col-lg-4.col-xs-12
             div.board-container
                 div.text-right
                     span(v-on:click='deleteBKD(bkd.BoardID)').board-delete
@@ -38,7 +38,7 @@ block content
                             div.value-container
                                 span.value {{ displayHieuSuat(bkd.MThientai, bkd.SLThucte) }}
                                 span &nbsp;&nbsp;&nbsp;%
-
+                p.badge-warning(v-if="Math.floor(Date.now() / 1000) - bkd.updated_time > 60") Không nhận được tín hiệu từ bảng
     script.
         var socket = io()
         var app = new Vue({
@@ -134,5 +134,9 @@ block content
         })
 
         socket.on('bkds updated', function () {
-            socket.emit('get bkds')
+            console.log('signal: bkds updated');
         })
+
+        setInterval(function (){
+            socket.emit('get bkds')
+        }, 1000);
